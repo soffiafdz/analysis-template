@@ -37,9 +37,8 @@ $secondary: $stopad-teal;
 // Type scale, in slide pixels, read from the back of a room. The range is
 // kept narrow: nothing a reader needs is below 30 px, and the headline is
 // only 1.4 times the body, so small text stays legible and large text does
-// not shout. Quarto ships Source Sans Pro in regular and semibold only;
-// 600 is the heaviest weight, since anything heavier is a synthetic bold
-// smeared from the semibold
+// not shout. The deck embeds IBM Plex Sans in regular and semibold; 600 is
+// the heaviest weight used
 $fs-run: 24px;       // running line: capitals, tracked
 $fs-caption: 30px;   // caption under the body; figure text is 30 px too
 $fs-head-cell: 30px; // table headers
@@ -70,9 +69,9 @@ $body-bg: #ffffff;
 $body-color: $ink;
 $link-color: $douglas-blue;
 $code-color: $ink-2;
-// Source Sans Pro comes with Quarto's default revealjs theme and is
-// embedded in the deck
-$font-family-sans-serif: "Source Sans Pro", "Helvetica Neue", Helvetica,
+// IBM Plex Sans (SIL Open Font License), embedded from reports-src/fonts/
+// through fonts/plex.css; the figures use the same files
+$font-family-sans-serif: "IBM Plex Sans", "Helvetica Neue", Helvetica,
   Arial, sans-serif;
 $presentation-font-size-root: $fs-body;
 $presentation-heading-font: $font-family-sans-serif;
@@ -85,6 +84,24 @@ $presentation-heading-letter-spacing: -0.01em;
 /*-- scss:rules --*/
 .reveal .slides {
   text-align: left;
+}
+
+// Every line break is written into the text (<br> at a phrase boundary);
+// nothing wraps on its own. A line too long for its column runs past it,
+// where the screenshot check catches it, instead of breaking by accident
+.reveal h2,
+.reveal table th,
+.reveal table td,
+.reveal .statement,
+.reveal .caption,
+.reveal .title-block .title,
+.reveal .title-block .subtitle,
+.reveal .title-block .byline,
+.reveal .title-block .meta,
+.reveal .title-block .closing-head,
+.reveal .title-block .ask,
+.reveal .title-block .context {
+  white-space: nowrap;
 }
 
 .reveal ::selection {
@@ -167,9 +184,16 @@ $presentation-heading-letter-spacing: -0.01em;
 .reveal .split.half {
   grid-template-columns: 1fr 1fr;
 }
-// Two columns of statements under a full-width table
-.reveal .split.below {
+// Statements under a full-width table
+.reveal .split.below,
+.reveal .statement.below {
+  display: block;
   margin-top: $space-7;
+}
+// In a column beside a figure, a table spans its column, so its right edge
+// meets the statements' edge
+.reveal .split table {
+  width: 100%;
 }
 .reveal .split > div {
   display: flex;
