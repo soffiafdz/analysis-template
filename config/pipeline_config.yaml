@@ -30,9 +30,18 @@ output:
   figure_format: [pdf, png]
   dpi: 600
   # Slide versions of figures, PNG only: no title or caption (the slide
-  # heading carries them), 16:9 and larger text
-  slide_figure_size: [13.33, 7.5]
-  slide_base_size: 20
+  # heading carries them). Each is drawn at the size of the area it fills on
+  # the 1600 x 900 px slide (inches at slide_dpi, shown at one image pixel
+  # per slide pixel), in Source Sans Pro at slide_text_px, so figure and
+  # slide type match. Areas: full width and the wider column of the two
+  # column layouts (reports-src/slides.scss)
+  slide_dpi: 200
+  slide_text_px: 32
+  slide_areas:
+    full: [8, 3.2]
+    columns_7: [4.52, 3.2]
+    columns_6: [3.88, 3.2]
+    columns_5: [3.235, 3.2]
   table_formats: [html, tex]
 
 scripts:
