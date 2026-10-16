@@ -3,5 +3,15 @@ Package: penguins.example
 Version: 0.1.0
 Depends: R (>= 4.6)
 Imports:
+    data.table,
+    ggplot2,
+    ggtext,
+    gt,
+    here,
+    knitr,
     lintr,
-    rmarkdown
+    ragg,
+    rmarkdown,
+    stringr,
+    systemfonts,
+    yaml
