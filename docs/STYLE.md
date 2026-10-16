@@ -73,18 +73,29 @@ values that do not pass). Two greys close to each other read as one.
 | Output | Font | Sizes |
 |---|---|---|
 | PDF (xelatex) | Libertinus Serif, Libertinus Sans headings | 10 pt body; tables via `style_pdf_table.fn()` |
-| HTML slides | Source Sans Pro (shipped with Quarto), then Helvetica Neue, Arial | in slide pixels: running line 24, caption and table headers 30, body and tables 34, headline 48; title slide: title 80, subtitle 44, name 36, event 32; weights 400 and 600 only |
+| HTML slides | IBM Plex Sans, embedded from `reports-src/fonts/` (SIL Open Font License), then Helvetica Neue, Arial | in slide pixels: running line 24, caption and table headers 30, body and tables 34, headline 48; title slide: title 80, subtitle 44, name 36, event 32; weights 400 and 600 |
 | PowerPoint | Arial | titles 26 pt bold, body 18 pt, notes 14 pt |
-| Figures | ggplot2 default sans; slide versions in Source Sans Pro (`register_slide_font()`, drawn by ragg) | `theme_publication()` base size 10 to 12; slide versions at 32 px (`slide_text_px`), tick labels included |
+| Figures | ggplot2 default sans; slide versions in IBM Plex Sans (`register_slide_font()`, drawn by ragg) | `theme_publication()` base size 10 to 12; slide versions at 30 px (`slide_text_px`), tick labels included |
 
 The slide scale is narrow on purpose: nothing a reader needs is below 30
 px, and the headline is only 1.4 times the body. Raising every size
 together keeps the problem (big text too big, small text too small); the
 fix is to raise the small sizes and lower the large ones.
 
-Quarto ships Source Sans Pro in regular and semibold only. A weight of 700
-makes the browser smear the semibold into a synthetic bold, which reads as
-heavy and blurred; the theme never asks for more than 600.
+IBM Plex Sans was chosen from rendered specimens (it replaced Source Sans
+Pro, which came with Quarto by default and was never chosen): even and
+crisp on a projector, with clear figures for tables of numbers. The deck
+embeds its regular, italic and semibold files, so rendering needs no
+network, and the figures register the same files. A weight the deck does
+not embed would be synthesised by the browser and read as heavy and
+blurred, so the theme stays at 400 and 600.
+
+Every line break is written into the text, as `<br>` at a phrase
+boundary. Headlines, captions, statements, table cells and the title and
+closing slides do not wrap on their own (`white-space: nowrap`); a line
+too long for its column runs past it, where the screenshot check catches
+it, instead of breaking mid-phrase. Write a line to fit, or break it on
+purpose.
 
 ## Figures
 
@@ -175,7 +186,9 @@ Each fault below has turned up in a real deck.
 | A type scale too wide | Title 96 and headlines 56 beside a 20 px footer and 28 px captions | Narrow the range: raise the small sizes, lower the large ones |
 | Numbers inside narrow bars | Counts of 11 and 12 squeezed into stacked segments | Small multiples (one panel per group) with each count at its bar's end |
 | A figure that has to be decoded | Leave-one-out p values on a reversed log axis with two thresholds | Say it in a table, with the failing values in grey |
-| Synthetic bold | Titles at weight 700 in Source Sans Pro | Weight 600 |
+| Synthetic bold | Titles at weight 700 when only 400 and 600 are embedded | Weights the deck embeds |
+| Accidental line breaks | "PREVENT-/AD" in a table header; a caption whose last word wraps; "68.3/(5.1)" | No automatic wrapping; breaks written as `<br>` at phrase boundaries; columns wide enough for their tables |
+| A default typeface nobody chose | The theme's font inherited from the tool | Choose from rendered specimens; embed the files |
 | An eyebrow over every title | "RESULTS · AMYLOID × FACTOR" in red caps | The part goes in the footer; the headline speaks alone |
 | Big-number cards | Three grey tiles with a red top bar and a large value | The number as a direct label in the figure, or a row in a compact table |
 | A heading inside a fenced div | `### Open questions` inside `::: {.title-block}` | Pandoc wraps it in a nested section, which reveal treats as a slide; use a span (`[Open questions]{.closing-head}`) |

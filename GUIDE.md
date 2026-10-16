@@ -334,8 +334,9 @@ Generic base, identical across projects, then extended per project below a
   extension sets the format. PDFs are written with `cairo_pdf`, which
   embeds the fonts; PNGs with `ragg::agg_png`, which draws fonts
   registered with systemfonts.
-- Slide figures: `register_slide_font()` registers the Source Sans Pro
-  files that Quarto ships; `theme_slide(base_size)` sets them in that face
+- Slide figures: `register_slide_font()` registers the IBM Plex Sans files
+  in `reports-src/fonts/`, which the deck embeds; `theme_slide(base_size)`
+  sets figures in that face
   with a recessive grid and the slide inks of `manuscript_colors()`;
   `slide_base_size(output.slide_text_px, output.slide_dpi)` gives the base
   size that matches the slides' text.
@@ -527,6 +528,8 @@ conversion to PowerPoint:
       slide-number: false
       progress: false
       include-after-body: slides-footer.html
+      # IBM Plex Sans, embedded from reports-src/fonts/
+      css: fonts/plex.css
   ```
 
   The title page, one text block beside the red logo panel:
@@ -535,7 +538,7 @@ conversion to PowerPoint:
   ## {.title-page}
 
   ::: {.title-block}
-  [The title]{.title}
+  [The title,<br>broken by hand]{.title}
 
   [The subtitle]{.subtitle}
 
@@ -565,6 +568,10 @@ conversion to PowerPoint:
     or `{.split .half}` (6 + 6), each column a `::: {}` div: the figure in
     the wider one, a table and `::: {.statements}` in the other;
   - a table, with `:::: {.split .half .below}` for two statements under it.
+
+  Text does not wrap on its own: a second line is a `<br>` written at a
+  phrase boundary, in headlines, captions, statements, table headers
+  (`escape = FALSE`) and the title and closing slides.
 
   `[...]{.statement}` is a sentence led by a bold number or phrase;
   `[...]{.caption}` is the one grey line under the body; `::: {.notes}`
@@ -703,7 +710,9 @@ pandoc's default (Python with python-pptx, outside renv). Re-run it from
 | Slides crowded at the top with the lower half empty; centring and enlarging made it worse | Figures drawn for the slide's free area and two-column layouts (docs/STYLE.md, 5, 8) |
 | A type scale from 20 to 96 px: footers unreadable, titles shouting | A narrow scale, nothing read below 30 px (docs/STYLE.md) |
 | Titles in a synthetic bold, blurred | Source Sans Pro ships 400 and 600 only; weights up to 600 (docs/STYLE.md) |
-| Figure text in Helvetica beside Source Sans slides | `register_slide_font()` and ragg (5) |
+| Figure text in Helvetica beside the slides' typeface | `register_slide_font()` and ragg (5) |
+| Line breaks fell wherever a column ended ("PREVENT-/AD") | No automatic wrapping; breaks written as `<br>` (8, docs/STYLE.md) |
+| A deck kept the tool's default typeface without anyone choosing it | IBM Plex Sans, chosen from rendered specimens and embedded (docs/STYLE.md) |
 
 ---
 
