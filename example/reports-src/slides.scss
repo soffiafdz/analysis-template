@@ -1,15 +1,23 @@
 /*-- scss:defaults --*/
-// Slide theme for revealjs (docs/STYLE.md). Brand colours are for the frame
-// of the slides (labels, bars, rules); data colours from manuscript_colors()
-// are for figures and for cards that stand for a group. Neither is used for
-// the other.
+// Slide theme for revealjs (docs/STYLE.md). Brand colours frame the slides
+// (the title panel, table header rules); data colours from
+// manuscript_colors() are for figures. Neither is used for the other.
+//
+// Layout: a 1600 x 900 px slide on a 12-column grid with 48 px gutters,
+// type sized for a projected room. The headline sits top left; the body
+// below it is a full-width figure or two columns (7 + 5, 5 + 7 or 6 + 6)
+// whose figures are drawn at the size of their column (config
+// output$slide_areas); under a hairline at the foot, a running line names
+// the part of the talk and the slide number. The title and closing slides
+// put the text on white beside a McGill red panel holding the logos.
 
-// Neutrals
-$ink: #1A1A1A;
-$ink-soft: #4A4A4A;
-$ink-muted: #5C5C5C;
+// Two tones carry the text: ink for everything that is read, grey for
+// everything that only orients (captions, the running line, metadata)
+$ink: #161616;
+$ink-2: #454545;     // subtitles, table headers
+$ink-3: #737373;     // captions, running line, metadata (4.7:1 on white)
 $rule: #D9D9D9;
-$panel: #F5F5F5;
+$panel: #F5F3F2;
 
 // Brand: McGill red leads; the Douglas Research Centre and the StoP-AD
 // Centre supply the secondary colours (from douglas.research.mcgill.ca and
@@ -26,271 +34,388 @@ $douglas-deep: #003E62;   // site, --douglas-secondary2
 $accent: $mcgill-red;
 $secondary: $stopad-teal;
 
+// Type scale, in slide pixels, read from the back of a room. The range is
+// kept narrow: nothing a reader needs is below 30 px, and the headline is
+// only 1.4 times the body, so small text stays legible and large text does
+// not shout. Quarto ships Source Sans Pro in regular and semibold only;
+// 600 is the heaviest weight, since anything heavier is a synthetic bold
+// smeared from the semibold
+$fs-run: 24px;       // running line: capitals, tracked
+$fs-caption: 30px;   // caption under the body; figure text is 30 px too
+$fs-head-cell: 30px; // table headers
+$fs-body: 34px;      // tables, statements, lists
+$fs-head: 48px;      // slide headline
+// Title and closing slides
+$fs-meta: 32px;      // event and date, under the name
+$fs-byline: 36px;
+$fs-sub: 44px;
+$fs-display: 80px;
+$weight-strong: 600;
+
+// Spacing scale
+$space-1: 8px;
+$space-2: 12px;
+$space-3: 16px;
+$space-4: 24px;
+$space-5: 32px;
+$space-6: 48px;
+$space-7: 64px;
+$space-8: 96px;
+$gutter: $space-6;
+// The running line and its hairline take the foot of the slide
+$run-gap: 18px;
+$foot: 88px;
+
 $body-bg: #ffffff;
 $body-color: $ink;
 $link-color: $douglas-blue;
-$code-color: $ink-soft;
+$code-color: $ink-2;
 // Source Sans Pro comes with Quarto's default revealjs theme and is
 // embedded in the deck
 $font-family-sans-serif: "Source Sans Pro", "Helvetica Neue", Helvetica,
   Arial, sans-serif;
-$presentation-font-size-root: 34px;
+$presentation-font-size-root: $fs-body;
 $presentation-heading-font: $font-family-sans-serif;
 $presentation-heading-color: $ink;
-$presentation-heading-font-weight: 700;
+$presentation-heading-font-weight: $weight-strong;
 $presentation-heading-text-transform: none;
-$presentation-heading-line-height: 1.15;
-$presentation-h2-font-size: 1.45em;
+$presentation-heading-line-height: 1.1;
+$presentation-heading-letter-spacing: -0.01em;
 
 /*-- scss:rules --*/
 .reveal .slides {
   text-align: left;
 }
 
+.reveal ::selection {
+  background: rgba($accent, 0.18);
+}
+
+// --- Slide frame ---------------------------------------------------------------
+// The deck's YAML sets display: flex, so reveal shows each slide as a column
+// the height of the slide. The body follows the headline at a fixed gap;
+// the foot stays clear for the running line.
+.reveal .slides > section {
+  height: 100%;
+  box-sizing: border-box;
+  flex-direction: column;
+  padding-bottom: $foot;
+}
+
 .reveal h2 {
-  margin: 0 0 0.6em;
+  font-size: $fs-head;
+  margin: 0 0 $space-6;
   text-wrap: balance;
 }
 
-// Eyebrow: a short red label above the title, set on the heading:
-// ## Title {data-eyebrow="Results"}
-.reveal .slides section[data-eyebrow]::before {
-  content: attr(data-eyebrow);
-}
-.reveal .slides section[data-eyebrow]::before,
-.reveal .eyebrow {
-  display: block;
-  font-size: 0.5em;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  line-height: 1.4;
-  text-transform: uppercase;
-  color: $accent;
-  margin-bottom: 0.5em;
+.reveal p {
+  margin: 0;
 }
 
 .reveal strong {
   color: $ink;
+  font-weight: $weight-strong;
 }
 
-// At most one phrase per slide in the accent colour
-.reveal .accent {
-  color: $accent;
-  font-weight: 600;
+// Running line: a hairline across the slide, then the part of the talk
+// (## Headline {data-part="Results"}) at the left and the slide number
+// (data-n, set by slides-footer.html) at the right, in small tracked
+// capitals so it reads as the slide's frame, not its content
+.reveal .slides > section[data-part]::after,
+.reveal .slides > section[data-n]:not(.title-page)::before {
+  position: absolute;
+  bottom: 0;
+  font-size: $fs-run;
+  line-height: 1;
+  font-weight: $weight-strong;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $ink-3;
+  font-variant-numeric: tabular-nums;
+}
+.reveal .slides > section[data-part]::after {
+  content: attr(data-part);
+  left: 0;
+  right: 0;
+  padding-top: $run-gap;
+  border-top: 1px solid $rule;
+}
+.reveal .slides > section[data-n]:not(.title-page)::before {
+  content: attr(data-n);
+  right: 0;
+  letter-spacing: 0.04em;
+  z-index: 1;
 }
 
+// --- Body ----------------------------------------------------------------------
+// Two columns on the 12-column grid: ::: {.split} is 7 + 5, .wide-right
+// 5 + 7, .half 6 + 6. Both columns run the height of the row; in a text
+// column with more than one block, the last block (the statements) sits at
+// the bottom, level with the figure's lower edge.
+.reveal .split {
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  column-gap: $gutter;
+  align-items: stretch;
+}
+.reveal .split > div > :last-child:not(:first-child) {
+  margin-top: auto;
+}
+.reveal .split.wide-right {
+  grid-template-columns: 5fr 7fr;
+}
+.reveal .split.half {
+  grid-template-columns: 1fr 1fr;
+}
+// Two columns of statements under a full-width table
+.reveal .split.below {
+  margin-top: $space-7;
+}
+.reveal .split > div {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+  min-width: 0;
+}
+.reveal .statements {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+}
+
+// Figures are drawn at their column's width, so they fill it exactly
+.reveal .slides img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+}
+.reveal .slides div.cell,
+.reveal .slides .cell-output-display {
+  margin: 0;
+}
+
+// Statements beside a figure: read text, in ink, led by a number or a
+// phrase in semibold
+.reveal .statement {
+  font-size: $fs-body;
+  line-height: 1.3;
+  color: $ink;
+  text-wrap: pretty;
+}
+
+// The caption under the body: smaller and grey, so it reads as a note on
+// the figure rather than as part of it
+.reveal .caption {
+  display: block;
+  font-size: $fs-caption;
+  line-height: 1.35;
+  color: $ink-3;
+  margin-top: $space-4;
+}
+
+.reveal ul,
+.reveal ol {
+  margin: 0;
+  padding-left: 1.1em;
+}
 .reveal ul li,
 .reveal ol li {
-  margin-bottom: 0.45em;
+  font-size: $fs-body;
+  line-height: 1.3;
+  color: $ink;
+  margin-bottom: $space-5;
+}
+.reveal ul li::marker {
+  color: $ink-3;
 }
 
-// The slide's question or claim, under the title
-.reveal .lead {
-  display: block;
-  font-size: 1.1em;
-  line-height: 1.35;
-  color: $ink-soft;
-  margin-bottom: 0.9em;
+// --- Tables --------------------------------------------------------------------
+// As wide as their content, at the read size: row labels left, numbers
+// right in tabular figures, semibold headers over a red rule, light row
+// lines.
+.reveal table {
+  width: auto;
+  font-size: $fs-body;
+  line-height: 1.25;
+  margin: 0;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.reveal table th {
+  font-size: $fs-head-cell;
+  font-weight: $weight-strong;
+  color: $ink-2;
+  border-bottom: 2px solid $accent;
+  vertical-align: bottom;
+}
+.reveal table td {
+  color: $ink;
+  border-bottom: 1px solid $rule;
+}
+.reveal table td,
+.reveal table th {
+  padding: $space-3 0 $space-3 $space-6;
+}
+.reveal table td:first-child,
+.reveal table th:first-child {
+  padding-left: 0;
+}
+// A value that does not pass (p of .05 or more) steps back to grey
+.reveal table .ns {
+  color: $ink-3;
 }
 
-// --- Title page and closing slide -------------------------------------------
-// ## {.title-page}, then ::: {.title-block} (eyebrow, title, subtitle,
-// byline) and ::: {.logos}
-.reveal .slides section.title-page {
-  height: 100%;
+// --- Title page and closing slide ---------------------------------------------
+// ## {.title-page}, then ::: {.title-block} holding three divs, .top (the
+// date), .middle (title and subtitle) and .bottom (the byline), and
+// ::: {.logos}. The text takes the first 8 columns; the red panel takes the
+// last 4 and runs past the slide to the screen edges. The logos are sized
+// to fill the panel's width and stacked at one gap. The closing slide is
+// ::: {.title-block .closing}: a headline and the questions, from the top.
+$panel-left: calc((100% - 11 * #{$gutter}) * 8 / 12 + 8 * #{$gutter});
+$bleed: 400px;
+
+.reveal .slides > section.title-page {
+  padding-bottom: 0;
 }
-.reveal .slides section.title-page > h2 {
+.reveal .slides > section.title-page > h2 {
   display: none;
 }
+.reveal .slides > section.title-page::before {
+  content: "";
+  position: absolute;
+  top: -$bleed;
+  bottom: -$bleed;
+  right: -$bleed;
+  left: $panel-left;
+  background: $mcgill-red;
+}
+// The title page's text is one block: title and subtitle, then, after a
+// wider gap, the name and the event, centred on the slide's height like
+// the logo stack beside it
 .reveal .title-block {
-  border-left: 5px solid $accent;
-  padding-left: 34px;
-  margin-top: 7em;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: calc(#{$panel-left} - #{$space-7});
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.reveal .title-block .credit {
+  display: block;
+  margin-top: $space-7;
 }
 .reveal .title-block .title,
 .reveal .title-block .subtitle,
-.reveal .title-block .byline {
+.reveal .title-block .byline,
+.reveal .title-block .meta,
+.reveal .title-block .closing-head,
+.reveal .title-block .ask,
+.reveal .title-block .context {
   display: block;
 }
+.reveal .title-block .meta {
+  font-size: $fs-meta;
+  color: $ink-3;
+  margin-top: $space-1;
+}
 .reveal .title-block .title {
-  font-size: 2.1em;
-  font-weight: 700;
-  line-height: 1.1;
+  font-size: $fs-display;
+  font-weight: $weight-strong;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
   color: $ink;
   text-wrap: balance;
 }
 .reveal .title-block .subtitle {
-  font-size: 1em;
-  line-height: 1.35;
-  color: $ink-soft;
-  margin-top: 0.5em;
-  text-wrap: balance;
+  font-size: $fs-sub;
+  line-height: 1.2;
+  color: $ink-2;
+  margin-top: $space-4;
 }
 .reveal .title-block .byline {
-  font-size: 0.72em;
-  color: $ink-muted;
-  margin-top: 1.4em;
-}
-.reveal .title-block p {
-  margin: 0;
+  font-size: $fs-byline;
+  font-weight: $weight-strong;
+  color: $ink;
 }
 
-// Logos along the bottom edge. The McGill file is the reversed (white)
-// wordmark, so it sits on a red box as on McGill's own pages
+// Closing: the headline at the top, then the questions as rows of equal
+// height between hairlines, each a question and one grey line of what the
+// data say
+.reveal .title-block.closing {
+  justify-content: flex-start;
+  padding-bottom: $space-6;
+}
+.reveal .title-block.closing .closing-head {
+  margin-bottom: $space-5;
+}
+.reveal .title-block.closing .question {
+  flex: 1;
+  justify-content: flex-start;
+  padding-top: $space-4;
+  border-top: 1px solid $rule;
+}
+.reveal .title-block .closing-head {
+  font-size: $fs-head;
+  font-weight: $weight-strong;
+  line-height: 1.1;
+  color: $ink;
+}
+.reveal .title-block .question {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+.reveal .title-block .ask {
+  font-size: $fs-sub;
+  line-height: 1.3;
+  color: $ink;
+  text-wrap: pretty;
+}
+.reveal .title-block .context {
+  font-size: $fs-byline;
+  line-height: 1.35;
+  color: $ink-3;
+}
+
+// The McGill file is the reversed (white) wordmark; the other two logos
+// are drawn in white (.mono) to match it on the red panel. The stack is
+// spaced evenly, so the space above and below it equals the gaps inside
+// it, and the logos are sized to similar widths so it fills the panel
 .reveal .logos {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0.5em;
+  top: 0;
+  bottom: 0;
+  left: $panel-left;
+  // The red runs past the slide edge by reveal's margin (3% of 1600 px);
+  // the stack is centred on the red, not on the slide
+  right: -48px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 2.8em;
+  justify-content: space-evenly;
 }
 .reveal .logos p {
   display: contents;
 }
 .reveal .logos img {
-  height: 84px;
   width: auto;
-  max-height: none;
-  margin: 0;
 }
 .reveal .logos img.mcgill {
-  height: 60px;
-  background: $mcgill-red;
-  padding: 10px 16px;
-  border-radius: 6px;
+  height: 100px;
 }
-
-// --- Section dividers: ## Title {.divider data-eyebrow="Part 2"} ----------
-// The red bar is drawn on each child, so it stops at the last line
-.reveal .slides section.divider {
-  padding-top: 5em;
+.reveal .logos img.douglas {
+  height: 156px;
 }
-.reveal .slides section.divider::before,
-.reveal .slides section.divider > * {
-  border-left: 5px solid $accent;
-  padding-left: 34px;
-  margin: 0;
+.reveal .logos img.stopad {
+  height: 210px;
 }
-.reveal .slides section.divider::before {
-  padding-bottom: 0.5em;
+.reveal .logos img.mono {
+  filter: brightness(0) invert(1);
 }
-.reveal .slides section.divider h2 {
-  font-size: 2.1em;
-  padding-bottom: 0.3em;
-}
-.reveal .slides section.divider p {
-  color: $ink-soft;
-}
-
-// --- Number cards ------------------------------------------------------------
-// Grey panel, coloured top bar, bold title, large value, muted unit. The
-// rows are a subgrid, so titles, values and details line up across a row of
-// cards even when one title wraps. A card holds at most four paragraphs.
-.cards {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(0, 1fr);
-  grid-template-rows: repeat(4, auto);
-  column-gap: 1.1em;
-  margin: 0.4em 0 1em;
-}
-.cards > .card {
-  display: grid;
-  grid-row: span 4;
-  grid-template-rows: subgrid;
-  row-gap: 0;
-}
-.card {
-  background: $panel;
-  border-top: 5px solid $rule;
-  border-radius: 3px;
-  padding: 0.6em 0.8em 0.7em;
-  font-size: 0.85em;
-  line-height: 1.35;
-}
-.card p {
-  margin: 0;
-}
-.card p + p {
-  margin-top: 0.3em;
-}
-.card .big {
-  display: block;
-  font-size: 2.2em;
-  font-weight: 700;
-  line-height: 1.05;
-  color: $ink;
-  white-space: nowrap;
-}
-.card .unit {
-  display: block;
-  color: $ink-muted;
-}
-// Colour rule (docs/STYLE.md): a card standing for a group in the figures
-// takes that group's colour, through one .card.<group> rule per group in the
-// project's copy of this file. Other cards are .red; .teal marks the second
-// of two kinds being contrasted on a slide without group cards.
-.card.red { border-top-color: $accent; }
-.card.teal { border-top-color: $secondary; }
-
-.note {
-  background: $panel;
-  border-left: 5px solid $secondary;
-  border-radius: 3px;
-  padding: 0.5em 0.9em;
-  font-size: 0.85em;
-}
-.note p {
-  margin: 0;
-}
-
-// --- Tables: centred, row labels left, values centred -----------------------
-.reveal table {
-  font-size: 0.85em;
-  margin: 0.5em auto 0.9em;
-  border-collapse: collapse;
-}
-.reveal table th {
-  border-bottom: 2px solid $accent;
-  text-align: center;
-}
-.reveal table td {
-  text-align: center;
-}
-.reveal table th:first-child,
-.reveal table td:first-child {
-  text-align: left;
-}
-.reveal table td,
-.reveal table th {
-  padding: 0.35em 1.1em;
-}
-.reveal table td {
-  border-bottom: 1px solid $rule;
-}
-
-// One muted line under a figure or a table
-.reveal figcaption,
-.reveal .caption,
-.reveal .small {
-  display: block;
-  text-align: center;
-  font-size: 0.65em;
-  color: $ink-muted;
-}
-
-.reveal .slide-number {
-  font-size: 18px;
-  color: $ink-muted;
-}
-.reveal .progress {
-  color: $accent;
-}
-
-// Species, as in the figures (manuscript_colors())
-.card.adelie { border-top-color: #4477AA; }
-.card.chinstrap { border-top-color: #228833; }
-.card.gentoo { border-top-color: #AA3377; }

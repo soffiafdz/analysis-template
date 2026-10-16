@@ -109,6 +109,8 @@ summary_env.lst <- list(
   ci_level = P$ci_level,
   figure = body_mass.res$figure,
   slide_figure = body_mass.res$slide_figure,
+  sample_figure = body_mass.res$sample_figure,
+  differences_figure = body_mass.res$differences_figure,
   timestamp = Sys.time()
 )
 write_rds_safe(summary_env.lst, output.path, "summary environment")

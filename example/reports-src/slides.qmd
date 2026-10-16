@@ -4,11 +4,18 @@ format:
   revealjs:
     embed-resources: true
     theme: [default, slides.scss]
-    slide-number: c/t
     menu: false
     width: 1600
     height: 900
     margin: 0.06
+    # Each slide is a flex column (slides.scss); figures are drawn at their
+    # area's size, so reveal must not stretch them; the running line
+    # carries the slide number
+    display: flex
+    auto-stretch: false
+    slide-number: false
+    progress: false
+    include-after-body: slides-footer.html
 ---
 
 ```{r}
@@ -37,112 +44,115 @@ spread <- paste(num.fn(min(differences$estimate)), "to",
                 num.fn(max(differences$estimate)), "g")
 dropped.v <- data$dropped_by_species[, sprintf("%d %s", N, species)]
 ci_pct <- 100 * ci_level
+# Tables: row labels left, numbers right (docs/STYLE.md)
+table.fn <- function(table.dt) {
+  knitr::kable(table.dt, format = "html",
+               align = c("l", rep("r", ncol(table.dt) - 1)))
+}
+# Slide figures (02), drawn at the size of their slide area
+figure.fn <- function(path) {
+  stopifnot(file.exists(path))
+  knitr::include_graphics(path)
+}
 
 # Claims the slides make, checked against the numbers
 stopifnot(
   all(differences$lower > 0),
   model$male$lower > 0,
-  model$chinstrap$lower < 0, model$chinstrap$upper > 0
+  model$chinstrap$lower < 0, model$chinstrap$upper > 0,
+  # The species terms in the speaker notes
+  model$gentoo$lower > 0
 )
 ```
 
 ## {.title-page}
 
 ::: {.title-block}
-[Worked example · `r format(Sys.Date(), "%B %Y")`]{.eyebrow}
-
 [Body mass of Palmer penguins by species and sex]{.title}
 
 [A worked example of the R analysis project template]{.subtitle}
 
-[Data: Gorman, Williams and Fraser (2014), `datasets::penguins`]{.byline}
+[[Worked example]{.byline} [Data: Gorman, Williams and Fraser (2014) · `r format(Sys.Date(), "%B %Y")`]{.meta}]{.credit}
 :::
 
 ::: {.logos}
 ![](logos/mcgill.svg){.mcgill fig-alt="McGill University"}
-![](logos/douglas.png){fig-alt="Douglas Research Centre"}
-![](logos/stopad.png){fig-alt="StoP-AD Centre"}
+![](logos/douglas.png){.douglas .mono fig-alt="Douglas Research Centre"}
+![](logos/stopad.png){.stopad .mono fig-alt="StoP-AD Centre"}
 :::
 
-## How much heavier are males, and does it depend on the species? {data-eyebrow="Question and data"}
+## How much heavier are males, and does it depend on the species? {data-part="Question and data"}
 
-::: {.cards}
-::: {.card .red}
-**Penguins measured**
-
-[`r data$penguins`]{.big} [penguins, three species]{.unit}
-
-Palmer Archipelago, `r data$years[1]` to `r data$years[2]`
-:::
-
-::: {.card .red}
-**Analysed**
-
-[`r data$complete`]{.big} [with every measurement and a sex]{.unit}
-
-Left out: `r paste(dropped.v, collapse = " and ")`
-:::
-:::
-
-::: {.note}
-**Data:** `datasets::penguins`, shipped with R since 4.5; Gorman, Williams
-and Fraser (2014).
-:::
-
-## Males are heavier in every species {data-eyebrow="Results"}
-
+:::: {.split .wide-right}
+::: {}
 ```{r}
-#| fig-align: center
-#| fig-cap: !expr 'sprintf("%d penguins. Points: individual penguins. Black: means with %.0f%% confidence intervals.", data$complete, ci_pct)'
-knitr::include_graphics(slide_figure)
+table.fn(data.table(
+  ` ` = c("Measured", "Analysed", "Years"),
+  Penguins = c(data$penguins, data$complete,
+               sprintf("%d–%d", data$years[1], data$years[2]))
+))
 ```
 
-## The difference is largest in `r largest` penguins {data-eyebrow="Results · Within species"}
-
-::: {.cards}
-::: {.card .adelie}
-**Adelie**
-
-[`r est.fn("Adelie")`]{.big} [`r n.fn("Adelie")` penguins]{.unit}
-
-`r ci_pct`% CI `r range.fn(difference.fn("Adelie"))` g
+[**Left out:** `r paste(dropped.v, collapse = " and ")`, without a sex or
+a measurement.]{.statement}
 :::
 
-::: {.card .chinstrap}
-**Chinstrap**
+::: {}
+```{r}
+#| fig-alt: "Penguins analysed per species, females and males"
+figure.fn(sample_figure)
+```
+:::
+::::
 
-[`r est.fn("Chinstrap")`]{.big} [`r n.fn("Chinstrap")` penguins]{.unit}
+[Data: `datasets::penguins`, shipped with R since 4.5; Palmer Archipelago,
+Antarctica.]{.caption}
 
-`r ci_pct`% CI `r range.fn(difference.fn("Chinstrap"))` g
+## Males are heavier in every species {data-part="Results"}
+
+```{r}
+#| fig-alt: "Body mass of each penguin by species, females and males, with means"
+figure.fn(slide_figure)
+```
+
+[`r data$complete` penguins. Points: individual penguins. Black: means with
+`r ci_pct`% confidence intervals.]{.caption}
+
+## The difference is largest in `r largest` penguins {data-part="Results · Within species"}
+
+:::: {.split}
+::: {}
+```{r}
+#| fig-alt: "Male minus female body mass within each species, with the model's single difference"
+figure.fn(differences_figure)
+```
 :::
 
-::: {.card .gentoo}
-**Gentoo**
+::: {}
+```{r}
+table.fn(differences[, .(
+  Species = as.character(species), `Difference (g)` = num.fn(estimate),
+  `95% CI (g)` = paste(num.fn(lower), "to", num.fn(upper))
+)])
+```
 
-[`r est.fn("Gentoo")`]{.big} [`r n.fn("Gentoo")` penguins]{.unit}
+::: {.statements}
+[**Adjusted for species,** males are heavier by
+`r num.fn(model$male$estimate)` g (`r range.fn(model$male)`); R²
+`r sprintf("%.2f", model$r_squared)`.]{.statement}
 
-`r ci_pct`% CI `r range.fn(difference.fn("Gentoo"))` g
+[**One difference for all species:** the model assumes it; within species
+it ranges from `r spread`.]{.statement}
 :::
 :::
+::::
 
-::: {.note}
-**Male minus female** mean body mass within each species, with a Welch
-confidence interval (CI).
-:::
+[Male minus female mean body mass, with Welch `r ci_pct`% confidence
+intervals. Dashed: the model's difference, adjusted for species.]{.caption}
 
-## Adjusted for species, males are heavier by `r num.fn(model$male$estimate)` g {data-eyebrow="Results · Model"}
-
-| Comparison | Difference (g) | `r ci_pct`% CI (g) |
-|---|---|---|
-| Males vs females | `r num.fn(model$male$estimate)` | `r range.fn(model$male)` |
-| Chinstrap vs Adelie | `r num.fn(model$chinstrap$estimate)` | `r range.fn(model$chinstrap)` |
-| Gentoo vs Adelie | `r num.fn(model$gentoo$estimate)` | `r range.fn(model$gentoo)` |
-
-[Linear model of body mass on species and sex; `r model$n` penguins;
-R² `r sprintf("%.2f", model$r_squared)`. Chinstrap and Adelie penguins of
-the same sex do not clearly differ.]{.small}
-
-::: {.note}
-**One difference for all species:** the model assumes it, while within
-species the difference ranges from `r spread`.
+::: {.notes}
+Linear model of body mass on species and sex, `r model$n` penguins.
+Chinstrap vs Adelie: `r num.fn(model$chinstrap$estimate)` g
+(`r range.fn(model$chinstrap)`); Gentoo vs Adelie:
+`r num.fn(model$gentoo$estimate)` g (`r range.fn(model$gentoo)`).
 :::

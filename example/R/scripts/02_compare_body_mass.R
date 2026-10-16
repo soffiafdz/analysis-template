@@ -7,13 +7,14 @@
 # linear model, body_mass ~ species + sex, for the difference adjusted for
 # species. The model assumes the same difference in every species; the
 # per-species intervals show how far that holds. Draws the figure for the
-# report and its slide version.
+# report and the slide figures, each at the size of its slide area.
 #
 # INPUTS:
 #   - data/derivatives/penguins.rds: from 01
 # OUTPUTS:
 #   - models/results/body_mass.rds: summaries, model estimates, figure paths
-#   - outputs/figures/body_mass.pdf, body_mass_slide.png
+#   - outputs/figures/body_mass.pdf, body_mass_slide.png, sample_slide.png,
+#     differences_slide.png
 # =============================================================================
 
 suppressPackageStartupMessages({
@@ -119,14 +120,32 @@ save_plot(
   ),
   figure.path, width = OUT$figure_size[1], height = OUT$figure_size[2]
 )
-save_plot(
+register_slide_font()
+slide_base <- slide_base_size(OUT$slide_text_px, OUT$slide_dpi)
+#' Save a slide figure at the size of its slide area
+save_slide.fn <- function(plot, path, area) {
+  size.v <- unlist(OUT$slide_areas[[area]])
+  save_plot(plot, path, width = size.v[1], height = size.v[2],
+            dpi = OUT$slide_dpi)
+}
+save_slide.fn(
   plot_body_mass.fn(
     penguins.dt, means.dt, colors.v,
     title = NULL, subtitle = NULL, caption = NULL,
-    base_size = OUT$slide_base_size
+    base_size = slide_base, slide = TRUE
   ),
-  slide.path,
-  width = OUT$slide_figure_size[1], height = OUT$slide_figure_size[2]
+  slide.path, "full"
+)
+sample.path <- get_data_path("outputs", "sample_slide")
+save_slide.fn(plot_sample_counts.fn(penguins.dt, colors.v, slide_base),
+              sample.path, "columns_7")
+differences.path <- get_data_path("outputs", "differences_slide")
+male_term <- paste0("sex", P$sex_labels[2])
+save_slide.fn(
+  plot_differences.fn(differences.dt,
+                      coefficients.dt[term == male_term, estimate],
+                      colors.v, slide_base),
+  differences.path, "columns_7"
 )
 
 log_section("Part 6: Save")
@@ -137,6 +156,8 @@ results.lst <- list(
   fit = fit.lst,
   figure = figure.path,
   slide_figure = slide.path,
+  sample_figure = sample.path,
+  differences_figure = differences.path,
   config = P,
   timestamp = Sys.time()
 )
