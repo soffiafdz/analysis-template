@@ -332,16 +332,25 @@ Generic base, identical across projects, then extended per project below a
   (`**bold**`, `<sup>`) in titles, axes and strips via ggtext.
 - `save_plot(plot, filename, width = 7, height = 7, dpi = 600)`; the
   extension sets the format. PDFs are written with `cairo_pdf`, which
-  embeds the fonts.
+  embeds the fonts; PNGs with `ragg::agg_png`, which draws fonts
+  registered with systemfonts.
+- Slide figures: `register_slide_font()` registers the Source Sans Pro
+  files that Quarto ships; `theme_slide(base_size)` sets them in that face
+  with a recessive grid and the slide inks of `manuscript_colors()`;
+  `slide_base_size(output.slide_text_px, output.slide_dpi)` gives the base
+  size that matches the slides' text.
 - `wrap_text()` (returns `NULL` for `NULL`), and `plot_comparison()` for
   estimates with CIs by group.
 - One `plot_<thing>()` per figure. Its `title`, `subtitle` and `caption`
   arguments accept `NULL`, and it takes `base_size`, so the same function
   draws the slide version: the script builds the plot a second time with
-  no title, subtitle or caption at `output.slide_base_size`, and saves it as
-  PNG at `output.slide_figure_size` to its own config path
-  (`<figure>_slide`). Direct labels that grow with the text may need extra
-  room on the axis for the slide version.
+  no title, subtitle or caption, in `theme_slide()`, and saves it as PNG at
+  the size of the slide area it fills (`output.slide_areas`: `full`, or
+  `columns_7`, `columns_6`, `columns_5` for the wider column of a two
+  column slide) to its own config path (`<figure>_slide`). The slide then
+  shows it at one image pixel per slide pixel, so its text matches the
+  slide's. Direct labels at the slide size often need more room; check for
+  clipped and colliding labels in the screenshots.
 
 **Domain modules:** one file per method or construct (e.g. a score
 recomputation, model helpers, a flow diagram).
@@ -492,8 +501,8 @@ log_script_end("NN_verb_object.R", success = TRUE)
 ### Slides
 
 Slides take their numbers from the same environment file as the report. They
-exist as two Quarto files, because the HTML cards do not survive conversion
-to PowerPoint:
+exist as two Quarto files, because the HTML layout does not survive
+conversion to PowerPoint:
 
 - **`slides.qmd`, the designed deck:** self-contained HTML (revealjs) with
   the theme in `reports-src/slides.scss` and the logos in
@@ -506,57 +515,72 @@ to PowerPoint:
     revealjs:
       embed-resources: true
       theme: [default, slides.scss]
-      slide-number: c/t
       menu: false
       width: 1600
       height: 900
       margin: 0.06
+      # Each slide is a flex column (slides.scss); figures are drawn at
+      # their area's size, so reveal must not stretch them; the running
+      # line carries the slide number
+      display: flex
+      auto-stretch: false
+      slide-number: false
+      progress: false
+      include-after-body: slides-footer.html
   ```
 
-  The title page (and a closing slide, if any):
+  The title page, one text block beside the red logo panel:
 
   ```markdown
   ## {.title-page}
 
   ::: {.title-block}
-  [Lab meeting · October 2026]{.eyebrow}
-
   [The title]{.title}
 
   [The subtitle]{.subtitle}
 
-  [Author · Lab, institution]{.byline}
+  [[Author]{.byline} [Lab meeting · October 2026]{.meta}]{.credit}
   :::
 
   ::: {.logos}
   ![](logos/mcgill.svg){.mcgill fig-alt="McGill University"}
-  ![](logos/douglas.png){fig-alt="Douglas Research Centre"}
-  ![](logos/stopad.png){fig-alt="StoP-AD Centre"}
+  ![](logos/douglas.png){.douglas .mono fig-alt="Douglas Research Centre"}
+  ![](logos/stopad.png){.stopad .mono fig-alt="StoP-AD Centre"}
   :::
   ```
 
-  Every other slide states its message in the heading and names its part
-  of the talk in an eyebrow:
-  `## Males are heavier in every species {data-eyebrow="Results"}`.
-  A divider between parts is `## Title {.divider data-eyebrow="Part 2"}`
-  followed by one line.
+  A closing slide, if there is one, is `## {.title-page}` with
+  `:::: {.title-block .closing}` holding `[Open questions]{.closing-head}`
+  and one `::: {.question}` per question (`[...]{.ask}` and
+  `[...]{.context}`), then the same logos. A heading (`###`) inside a
+  fenced div becomes a nested section, which reveal treats as a slide; use
+  a span instead.
 
-  Number cards are fenced divs: `::: {.cards}` holding one
-  `::: {.card .<group>}` per number, each with up to four paragraphs: a
-  bold title, `[value]{.big} [unit]{.unit}`, and a line of detail. Each
-  group gets a `.card.<group>` rule in the project's `slides.scss` with its
-  `manuscript_colors()` colour; other cards are `.red` (or `.teal` for the
-  second of two kinds), following the card rules in `docs/STYLE.md`. A
-  `::: {.note}` box holds a short explanation; `[...]{.lead}` sets the
-  slide's question under the title; `[...]{.small}` and `fig-cap` give one
-  small grey line under a table or figure. Figures use their slide
-  versions (section 5) with `#| fig-align: center`.
+  Every other slide states its message in a one-line heading and names its
+  part of the talk for the running line at the foot:
+  `## Males are heavier in every species {data-part="Results"}`. The body
+  is one of:
+  - a figure drawn for the full width;
+  - two columns, `:::: {.split}` (7 + 5), `{.split .wide-right}` (5 + 7)
+    or `{.split .half}` (6 + 6), each column a `::: {}` div: the figure in
+    the wider one, a table and `::: {.statements}` in the other;
+  - a table, with `:::: {.split .half .below}` for two statements under it.
+
+  `[...]{.statement}` is a sentence led by a bold number or phrase;
+  `[...]{.caption}` is the one grey line under the body; `::: {.notes}`
+  holds what the speaker needs but the room does not read. Tables are
+  `knitr::kable(format = "html")`, with values that do not pass wrapped in
+  `<span class="ns">` (and `escape = FALSE`). Figures come from
+  `include_graphics()` of their slide version (section 5).
 
   A deck is not finished until every slide has been looked at. Screenshot
   them all with `reports-src/screenshot_slides.sh` (Firefox), and go
-  through the faults table in `docs/STYLE.md`.
+  through the faults table in `docs/STYLE.md`: composition, type, labels
+  and text, not only overflow. A second reader who did not build the deck
+  (a colleague, or a fresh review) catches what the builder no longer
+  sees.
 - **`slides-pptx.qmd`, the editable copy** for colleagues to adapt: the same
-  content with native tables in place of the cards, on the template
+  content as native tables and figures, on the template
   `slides-reference.pptx`.
 
   ```yaml
@@ -672,10 +696,14 @@ pandoc's default (Python with python-pptx, outside renv). Re-run it from
 | "APOE ε4" printed with a blank for ε in the PDF | Libertinus fonts in `_quarto.yml` (8) |
 | Slides converted to PowerPoint lost their layout | A separate PowerPoint deck on its own template (8) |
 | A yellow line label was unreadable on white | 3:1 contrast for coloured text (docs/STYLE.md) |
-| A deck had values broken over two lines, "1,204 of 1,204", small left-aligned tables and a list of scripts | Card text budgets, the faults table and a screenshot of every slide (docs/STYLE.md, 8) |
-| Cards in a row did not line up, and one in one group's colour held another group's numbers | Cards on a shared grid; group colours only for that group's numbers (docs/STYLE.md) |
+| A deck had values broken over two lines, "1,204 of 1,204", small left-aligned tables and a list of scripts | The faults table and a screenshot of every slide (docs/STYLE.md, 8) |
+| Cards in a row did not line up, and one in one group's colour held another group's numbers | No number cards: numbers as direct labels in figures or in tables (docs/STYLE.md) |
 | A brand navy was nearly the colour for men | Brand and data colours at least 15 apart in OKLab (docs/STYLE.md) |
-| Topic titles ("Results") left the message to the speaker | Message titles, with the part of the talk in an eyebrow (8) |
+| Topic titles ("Results") left the message to the speaker | Message titles, with the part of the talk in the running line (8) |
+| Slides crowded at the top with the lower half empty; centring and enlarging made it worse | Figures drawn for the slide's free area and two-column layouts (docs/STYLE.md, 5, 8) |
+| A type scale from 20 to 96 px: footers unreadable, titles shouting | A narrow scale, nothing read below 30 px (docs/STYLE.md) |
+| Titles in a synthetic bold, blurred | Source Sans Pro ships 400 and 600 only; weights up to 600 (docs/STYLE.md) |
+| Figure text in Helvetica beside Source Sans slides | `register_slide_font()` and ragg (5) |
 
 ---
 
