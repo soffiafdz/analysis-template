@@ -1,0 +1,9 @@
+<script>
+  // Slide numbers for the footer (slides.scss): "n / total" on each slide
+  (function () {
+    var slides = document.querySelectorAll(".reveal .slides > section");
+    slides.forEach(function (slide, i) {
+      slide.setAttribute("data-n", (i + 1) + " / " + slides.length);
+    });
+  })();
+</script>

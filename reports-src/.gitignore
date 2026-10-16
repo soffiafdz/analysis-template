@@ -1,5 +1,7 @@
 /.quarto/
 *.html
+# Source, not output: the slide footer script the deck includes
+!slides-footer.html
 *_files/
 
 **/*.quarto_ipynb
