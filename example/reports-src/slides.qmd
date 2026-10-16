@@ -16,6 +16,8 @@ format:
     slide-number: false
     progress: false
     include-after-body: slides-footer.html
+    # IBM Plex Sans, embedded from reports-src/fonts/
+    css: fonts/plex.css
 ---
 
 ```{r}
@@ -68,7 +70,7 @@ stopifnot(
 ## {.title-page}
 
 ::: {.title-block}
-[Body mass of Palmer penguins by species and sex]{.title}
+[Body mass of Palmer<br>penguins by species<br>and sex]{.title}
 
 [A worked example of the R analysis project template]{.subtitle}
 
@@ -93,8 +95,8 @@ table.fn(data.table(
 ))
 ```
 
-[**Left out:** `r paste(dropped.v, collapse = " and ")`, without a sex or
-a measurement.]{.statement}
+[**Left out:** `r paste(dropped.v, collapse = " and ")`,<br>without a sex
+or a measurement.]{.statement}
 :::
 
 ::: {}
@@ -137,18 +139,18 @@ table.fn(differences[, .(
 ```
 
 ::: {.statements}
-[**Adjusted for species,** males are heavier by
-`r num.fn(model$male$estimate)` g (`r range.fn(model$male)`); R²
+[**Adjusted for species:** `r num.fn(model$male$estimate)` g
+heavier<br>(`r range.fn(model$male)`); R²
 `r sprintf("%.2f", model$r_squared)`.]{.statement}
 
-[**One difference for all species:** the model assumes it; within species
-it ranges from `r spread`.]{.statement}
+[**The model assumes one difference;**<br>within species,
+`r spread`.]{.statement}
 :::
 :::
 ::::
 
 [Male minus female mean body mass, with Welch `r ci_pct`% confidence
-intervals. Dashed: the model's difference, adjusted for species.]{.caption}
+intervals.<br>Dashed: the model's difference, adjusted for species.]{.caption}
 
 ::: {.notes}
 Linear model of body mass on species and sex, `r model$n` penguins.

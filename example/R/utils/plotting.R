@@ -129,21 +129,19 @@ slide_base_size <- function(text_px, dpi) {
 
 #' Register the slides' typeface for figures
 #'
-#' Quarto ships Source Sans Pro with its revealjs theme, in regular and
-#' semibold. Registering those files lets ragg draw figure text in the
+#' The slides embed IBM Plex Sans from reports-src/fonts/ (SIL Open Font
+#' License). Registering the same files lets ragg draw figure text in the
 #' slides' face, with "bold" set in the semibold, as on the slides.
 #' @param family Family name to register
 #' @return The family name, invisibly
-register_slide_font <- function(family = "Source Sans Pro") {
-  share <- system2("quarto", "--paths", stdout = TRUE)[[2]]
-  font_dir <- file.path(share, "formats", "revealjs", "reveal", "dist",
-                        "theme", "fonts", "source-sans-pro")
+register_slide_font <- function(family = "IBM Plex Sans") {
+  font_dir <- here::here("reports-src", "fonts")
   files.v <- file.path(font_dir, paste0(
-    "source-sans-pro-", c("regular", "semibold", "italic", "semibolditalic"),
+    "IBMPlexSans-", c("Regular", "SemiBold", "Italic", "SemiBoldItalic"),
     ".ttf"
   ))
   if (!all(file.exists(files.v))) {
-    stop("Source Sans Pro not found in ", font_dir, call. = FALSE)
+    stop("IBM Plex Sans not found in ", font_dir, call. = FALSE)
   }
   systemfonts::register_font(family, plain = files.v[1], bold = files.v[2],
                              italic = files.v[3], bolditalic = files.v[4])
@@ -155,7 +153,7 @@ register_slide_font <- function(family = "Source Sans Pro") {
 #' @param base_size Base font size in points, from slide_base_size()
 #' @param base_family Font family, registered by register_slide_font()
 #' @return ggplot2 theme object
-theme_slide <- function(base_size, base_family = "Source Sans Pro") {
+theme_slide <- function(base_size, base_family = "IBM Plex Sans") {
   colors.lst <- manuscript_colors()
   ggplot2::theme_minimal(base_size = base_size,
                          base_family = base_family) +

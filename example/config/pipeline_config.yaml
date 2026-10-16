@@ -38,14 +38,14 @@ output:
   # Slide versions of figures, PNG only: no title or caption (the slide
   # heading carries them). Each is drawn at the size of the area it fills on
   # the 1600 x 900 px slide (inches at slide_dpi, shown at one image pixel
-  # per slide pixel), in Source Sans Pro at slide_text_px, so figure and
-  # slide type match. Areas: full width and the wider column of the two
+  # per slide pixel), in IBM Plex Sans at slide_text_px (the size of the
+  # slide captions), so figure and slide type match. Areas: full width and the wider column of the two
   # column layouts (reports-src/slides.scss)
   slide_dpi: 200
-  slide_text_px: 32
+  slide_text_px: 30
   slide_areas:
-    full: [8, 3.2]
-    columns_7: [4.52, 3.2]
+    full: [8, 3.0]
+    columns_7: [4.52, 3.0]
 
 scripts:
   # One flag per script with a cache check; set true to re-run, then back
