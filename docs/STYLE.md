@@ -205,6 +205,10 @@ Each fault below has turned up in a real deck.
 | Thin slides | A slide holding one sentence | Merge it into the slide it qualifies |
 | Invented specifics | Owners and dates in "next steps" that nobody agreed | Decisions as open questions; only facts from the data or from the people concerned |
 | Unexpanded abbreviations | "NBA" for *Neurobiology of Aging* | Spell out on first use; journal names in full |
+| Plain wording that reads as another quantity | "How fast tau rises with amyloid" for a slope across people, read as change over time | The field's term ("amyloid–tau slope"); plain wording only where nothing else can be read into it |
+| One mark with several meanings | Filled for "corrected p < .05" on one slide, "CI excludes 0" on the next, "slope above 0" on a third | One meaning for filled marks across the deck; estimates that are not tests get plain marks |
+| The claims under test shown last | A replication whose original findings first appear on the comparison slide | An early slide with the original claims, the model behind each and what the source leaves out |
+| Choices without their origin | "Pre-specified" and "main" columns with nothing saying who chose each set, when and why | One table of the definitions side by side, each headed by where it comes from and when it was fixed |
 
 ### Checking a deck
 
@@ -218,8 +222,10 @@ Each fault below has turned up in a real deck.
 2. Judge the composition, not only the overflow: the body reaches the
    lower part of the slide, the columns share their top and bottom edges,
    and every block starts at the same left edge.
-3. Read the deck once as someone who has not seen the work, with the table
-   above; a colleague's first read is better still.
+3. Read the deck once as its actual reader, with the table above: what
+   they already know (the field, the cohort) needs no slide, what they
+   cannot know (the claims tested, each analysis choice and when it was
+   made) needs one. A colleague's first read is better still.
 4. After each fix, render and screenshot again.
 
 ### PowerPoint (`reports-src/slides-reference.pptx`)
