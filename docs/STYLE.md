@@ -111,8 +111,9 @@ purpose.
   it is shown at one image pixel per slide pixel and never scaled.
 - The line under a figure gives the sample size, the interval type and
   what the sign of an effect means.
-- Significance is shown by the marks (filled for significant, hollow for
-  not), not by colour alone or only in the text.
+- Significance is shown by the marks (filled for corrected p < .05,
+  hollow for not; a vertical tick for an estimate that is not a test),
+  not by colour alone or only in the text.
 
 ## Tables
 
@@ -149,7 +150,7 @@ A 1600 by 900 pixel slide on a 12-column grid with 48 pixel gutters.
   questions as rows between hairlines, each a question and one grey line
   of what the data say. No name or date.
 - **Content slides:** the headline, top left, states the slide's message in
-  one line (about 60 characters at 48 px). Nothing sits above it.
+  one line (about 70 characters at 48 px). Nothing sits above it.
 - **Running line:** a hairline across the slide's foot, then the part of
   the talk at the left (`{data-part="Results"}` on the heading) and the
   slide number at the right, in grey tracked capitals, so it reads as the
@@ -157,7 +158,9 @@ A 1600 by 900 pixel slide on a 12-column grid with 48 pixel gutters.
 - **Body:** a figure drawn for the full width, or two columns:
   `::: {.split}` (7 + 5), `.wide-right` (5 + 7) or `.half` (6 + 6). The
   wider column holds the figure; the other holds a table at the top and a
-  statement at the bottom, level with the figure's lower edge.
+  statement at the bottom, level with the figure's lower edge. Under a
+  full-width table, two statements side by side:
+  `:::: {.split .half .below}`.
 - **Statements:** body size, ink, led by a semibold number or phrase. One
   or two per slide.
 - **Tables:** as wide as their content, at body size; row labels left,
@@ -165,7 +168,8 @@ A 1600 by 900 pixel slide on a 12-column grid with 48 pixel gutters.
   light row lines. Values that do not pass (p of .05 or more) step back to
   grey (class `.ns` on the cell's text). A summary of p values across checks is
   a table, not a figure.
-- **Caption:** one grey line under the body, at 30 px.
+- **Caption:** at most two grey lines under the body, at 30 px, broken
+  by hand at a phrase boundary.
 - **Speaker notes** (`::: {.notes}`) take the details a listener does not
   need to read: data release, exact guideline wording, definitions.
 - One message per slide. A caveat goes on the slide it qualifies, in its
@@ -181,11 +185,11 @@ Each fault below has turned up in a real deck.
 | Fault | Example | Fix |
 |---|---|---|
 | Content crowded at the top, the lower half empty | A short table or five one-line bullets under the title | A figure drawn for the slide's free area; two columns whose text column spans the figure; caveats moved onto the slides they qualify. Centring the body only moves the gap above it, and stretching cards, rows or gaps looks artificial |
-| A lot of text | A note under every table, a caption of three clauses | One caption line; at most two statements per column; details in speaker notes |
+| A lot of text | A note under every table, a caption of three clauses | A caption of at most two lines; at most two statements per column; details in speaker notes |
 | An ugly title page | Sizes off any scale; the name alone at the foot; logos small in a tall panel, clustered (wide bands above and below) or spread (stretched gaps) | The name in the title block; logos sized to fill the panel's width and spaced evenly |
 | A type scale too wide | Title 96 and headlines 56 beside a 20 px footer and 28 px captions | Narrow the range: raise the small sizes, lower the large ones |
 | Numbers inside narrow bars | Counts of 11 and 12 squeezed into stacked segments | Small multiples (one panel per group) with each count at its bar's end |
-| A figure that has to be decoded | Leave-one-out p values on a reversed log axis with two thresholds | Say it in a table, with the failing values in grey |
+| A figure that has to be decoded | Leave-one-out p values on a reversed log axis with two thresholds | Corrected p is the only filter on a slide; influence ranges go in speaker notes as a diagnostic, never as pass or fail |
 | Synthetic bold | Titles at weight 700 when only 400 and 600 are embedded | Weights the deck embeds |
 | Accidental line breaks | "PREVENT-/AD" in a table header; a caption whose last word wraps; "68.3/(5.1)" | No automatic wrapping; breaks written as `<br>` at phrase boundaries; columns wide enough for their tables |
 | A default typeface nobody chose | The theme's font inherited from the tool | Choose from rendered specimens; embed the files |
@@ -206,7 +210,7 @@ Each fault below has turned up in a real deck.
 | Invented specifics | Owners and dates in "next steps" that nobody agreed | Decisions as open questions; only facts from the data or from the people concerned |
 | Unexpanded abbreviations | "NBA" for *Neurobiology of Aging* | Spell out on first use; journal names in full |
 | Plain wording that reads as another quantity | "How fast tau rises with amyloid" for a slope across people, read as change over time | The field's term ("amyloid–tau slope"); plain wording only where nothing else can be read into it |
-| One mark with several meanings | Filled for "corrected p < .05" on one slide, "CI excludes 0" on the next, "slope above 0" on a third | One meaning for filled marks across the deck; estimates that are not tests get plain marks |
+| One mark with several meanings | Filled for "corrected p < .05" on one slide, "CI excludes 0" on the next, "slope above 0" on a third | One meaning for filled marks across the deck; an estimate that is not a test gets a vertical tick (a solid dot reads as filled); findings reported elsewhere, in words only |
 | The claims under test shown last | A replication whose original findings first appear on the comparison slide | An early slide with the original claims, the model behind each and what the source leaves out |
 | Choices without their origin | "Pre-specified" and "main" columns with nothing saying who chose each set, when and why | One table of the definitions side by side, each headed by where it comes from and when it was fixed |
 

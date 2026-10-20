@@ -190,6 +190,10 @@ $presentation-heading-letter-spacing: -0.01em;
   display: block;
   margin-top: $space-7;
 }
+// Two statements side by side under a full-width table
+.reveal .split.half.below {
+  display: grid;
+}
 // In a column beside a figure, a table spans its column, so its right edge
 // meets the statements' edge
 .reveal .split table {
