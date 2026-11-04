@@ -771,8 +771,10 @@ and a change that is needed is made in the template first, then taken up
 in the project (`diff -u <template_dir>/<file> <file>`, until section 13
 gives a better way). Files the template only seeds (`README.md`,
 `config/pipeline_config.yaml`, `DESCRIPTION`, `environment.yml`) are the
-project's from the first edit. Where the project departs from the
-conventions, its README says so under "Project notes".
+project's from the first edit. The template is tagged `vYYYY.MM`, and
+`CHANGELOG.md` says what each tag changed; a project records the tag it
+took. Where the project departs from the conventions, its README says so
+under "Project notes".
 
 1. Create the project with the core files only:
 

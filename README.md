@@ -20,6 +20,7 @@ once and then belong to the project.
 | [`GUIDE.md`](GUIDE.md) | The full guide, with the reasoning behind each choice; stays here |
 | [`docs/CONVENTIONS.md`](docs/CONVENTIONS.md) | The short version that goes into each project |
 | [`docs/STYLE.md`](docs/STYLE.md) | The look of reports, figures, tables and slides |
+| [`CHANGELOG.md`](CHANGELOG.md) | What changed and when, by tag |
 
 ## Parts
 
@@ -34,6 +35,14 @@ once and then belong to the project.
 
 `README.project.md` is the outline of a project's README. To start a
 project, follow [`GUIDE.md`](GUIDE.md) section 13.
+
+## Versions
+
+Tags `vYYYY.MM` mark the states projects take files from, and
+[`CHANGELOG.md`](CHANGELOG.md) says what each one changed. A project
+records the tag it took and lists its departures in its README under
+"Project notes". A change that any project could use is made here first,
+tagged, and then taken up in the projects.
 
 ## Example
 
@@ -60,7 +69,7 @@ and GNU sed takes `-i` alone.
 
 ## Licence
 
-`GUIDE.md` and this README are licensed under
+`GUIDE.md`, `CHANGELOG.md` and this README are licensed under
 [CC BY 4.0](LICENSE-docs). Everything else, including the files copied into
 projects, is under the [MIT licence](LICENSE), except the logos in
 `reports-src/logos/`, which are trademarks of their institutions
