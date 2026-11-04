@@ -31,12 +31,16 @@ parameters: {}
 output:
   figure_format: [pdf, png]
   dpi: 600
+  # Project colours, merged over the shared entries of manuscript_colors():
+  # one per group, predictor or measure, from the Tol palettes in
+  # get_palette(), with a comment saying why each was chosen (docs/STYLE.md)
+  colors: {}
   # Slide versions of figures, PNG only: no title or caption (the slide
   # heading carries them). Each is drawn at the size of the area it fills on
   # the 1600 x 900 px slide (inches at slide_dpi, shown at one image pixel
   # per slide pixel), in IBM Plex Sans at slide_text_px (the size of the
-  # slide captions), so figure and slide type match. Areas: full width and the wider column of the two
-  # column layouts (reports-src/slides.scss)
+  # slide captions), so figure and slide type match. Areas: full width and
+  # the wider column of the two column layouts (reports-src/slides.scss)
   slide_dpi: 200
   slide_text_px: 30
   slide_areas:

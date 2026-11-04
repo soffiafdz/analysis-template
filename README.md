@@ -7,8 +7,11 @@ produced it.
 
 The template is a parts bin, not a skeleton to copy whole. A project starts
 with a few core files, and each further part is copied in the first time
-the project's code needs it. Copied files belong to the project from then
-on; the template is a starting point and a reference, not a dependency.
+the project's code needs it. The shared parts (helper modules, settings,
+the Quarto configuration and the slide theme) stay the template's: projects
+take them as they are, keep their own code in their own files, and send a
+needed change to the template first. The README and the config are seeded
+once and then belong to the project.
 
 ## Documents
 

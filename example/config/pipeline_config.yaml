@@ -35,12 +35,18 @@ parameters:
 
 output:
   figure_size: [7, 4]
+  # Species, from tol_bright; red is left out because it is too close to
+  # the McGill red of the slides (docs/STYLE.md)
+  colors:
+    adelie: "#4477AA"
+    chinstrap: "#228833"
+    gentoo: "#AA3377"
   # Slide versions of figures, PNG only: no title or caption (the slide
   # heading carries them). Each is drawn at the size of the area it fills on
   # the 1600 x 900 px slide (inches at slide_dpi, shown at one image pixel
   # per slide pixel), in IBM Plex Sans at slide_text_px (the size of the
-  # slide captions), so figure and slide type match. Areas: full width and the wider column of the two
-  # column layouts (reports-src/slides.scss)
+  # slide captions), so figure and slide type match. Areas: full width and
+  # the wider column of the two column layouts (reports-src/slides.scss)
   slide_dpi: 200
   slide_text_px: 30
   slide_areas:

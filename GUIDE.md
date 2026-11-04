@@ -267,7 +267,20 @@ Plain R files loaded with `source(here("R/utils/<file>.R"))`, not a package.
 Each module sources its own dependencies (e.g. `data_io.R` sources
 `logging.R`), so a script can source just what it needs.
 
-Shared modules, identical across projects:
+`R/utils/` holds two kinds of file, with different owners:
+
+- **Shared modules** (`config.R`, `logging.R`, `data_io.R`, `validation.R`,
+  `tables.R`, `plotting.R`) are the template's. A project takes them as
+  they are and does not edit them. A fix, or an addition any project could
+  use, goes into the template first and is then pulled into the project
+  (section 13). Nothing project-specific is appended to a shared file: once
+  it holds project code, every update from the template has to be merged
+  through that code, and the copies drift apart.
+- **Project modules** are the project's own: `figures.R`, `report_tables.R`
+  and one file per method or construct. Project colours live in the config
+  (`output.colors`), not in `plotting.R`.
+
+Shared modules:
 
 **`config.R`**
 - `load_config(config_file = here("config/pipeline_config.yaml"))` reads the
@@ -281,8 +294,8 @@ Shared modules, identical across projects:
 - `validate_config(config = NULL)`: requires the sections `general`, `data`,
   `parameters` and `scripts`, plus `general.random_seed` and the `data`
   groups `inputs`, `derivatives` and `models`.
-- Project-specific lookups (canonical factor levels, timepoint labels) are
-  added at the end of a project's copy, reading their values from the config.
+- Project-specific lookups (canonical factor levels, timepoint labels) go
+  in a project module, reading their values from the config.
 
 **`logging.R`**
 - Writes to `logs/pipeline_YYYYMMDD_HHMMSS.log`, one file per R process;
@@ -316,8 +329,8 @@ Shared modules, identical across projects:
 - `validate_age(...)`, `validate_unique_ids(data.dt, id_cols.v)`,
   `validate_packages(packages.v)`.
 
-Generic base, identical across projects, then extended per project below a
-`Project-specific` banner at the end of each file:
+Shared as well, and extended only through the config and the project
+modules:
 
 **`tables.R`** (gt)
 - Styling: `style_manuscript_table(gt_tbl, table_type = "main")` with
@@ -341,12 +354,15 @@ Generic base, identical across projects, then extended per project below a
   `title` is `NULL`, because the caption carries it),
   `style_screen_table.fn()` (larger text for a browser or slides),
   `style_pdf_table.fn(gt_tbl, size = 14)` (text that fits a PDF page).
-- One `create_<thing>_table()` per manuscript table.
+- Project tables: one `create_<thing>_table()` per table, in
+  `report_tables.R`, which sources `tables.R`.
 
 **`plotting.R`** (ggplot2)
 - `manuscript_colors()`: the single named list of colours. Every figure
   takes its colours from it, so a variable has the same colour in every
-  figure. Projects add one entry per group, predictor or measure.
+  figure. The shared entries (sex, reference lines, the slide inks) are in
+  the function; the project's entries, one per group, predictor or measure,
+  are read from `output.colors` in the config and merged over them.
 - `get_palette(type)`: `"default"` (Okabe-Ito), `"tol_bright"` and
   `"tol_muted"` (Paul Tol, colourblind-safe), `"sex"`, `"sex_md"`.
 - `theme_publication(base_size = 10, use_markdown = FALSE)`, based on
@@ -364,7 +380,8 @@ Generic base, identical across projects, then extended per project below a
   size that matches the slides' text.
 - `wrap_text()` (returns `NULL` for `NULL`), and `plot_comparison()` for
   estimates with CIs by group.
-- One `plot_<thing>()` per figure. Its `title`, `subtitle` and `caption`
+- Project figures: one `plot_<thing>()` per figure, in `figures.R`, which
+  sources `plotting.R`. Its `title`, `subtitle` and `caption`
   arguments accept `NULL`, and it takes `base_size`, so the same function
   draws the slide version: the script builds the plot a second time with
   no title, subtitle or caption, in `theme_slide()`, and saves it as PNG at
@@ -375,8 +392,9 @@ Generic base, identical across projects, then extended per project below a
   slide's. Direct labels at the slide size often need more room; check for
   clipped and colliding labels in the screenshots.
 
-**Domain modules:** one file per method or construct (e.g. a score
-recomputation, model helpers, a flow diagram).
+**Project modules:** `figures.R`, `report_tables.R`, and one file per
+method or construct (e.g. a score recomputation, the growth-model helpers,
+regional PET values). Each sources the shared modules it needs.
 
 ---
 
@@ -709,6 +727,7 @@ pandoc's default (Python with python-pptx, outside renv). Re-run it from
 | Problem | What prevents it |
 |---|---|
 | A released derived variable was computed incorrectly by the provider | Recompute from inputs; assert agreement with the release (9) |
+| Shared helpers drifted apart between projects: project functions had been appended to them, so a template fix could only be taken up by merging through project code | The template owns the shared files and projects do not edit them; project code in its own files, project colours in the config (5, 13) |
 | One variable was read in seven places, several with the column name hardcoded | One loader function, column name in the config (4) |
 | A script overwrote its own input and gave a different result on a second run | Idempotent scripts (6) |
 | Bootstrap checkpoints outlived a data change | Data and specification flags in the checkpoint check (10) |
@@ -745,9 +764,15 @@ to copy whole: a file or folder enters a repository the first time code needs
 it. A first commit with empty folders, unused helpers and placeholder text
 looks generated, and is harder to review.
 
-Copied files belong to the project and may diverge from the template. To
-take up a later change to the template, compare the two copies
-(`diff -u <template_dir>/<file> <file>`) and apply what fits the project.
+Files taken from the template are of two kinds. Shared files (the helper
+modules of section 5, the lint and renv settings, the Quarto configuration
+and the slide theme) stay the template's: the project does not edit them,
+and a change that is needed is made in the template first, then taken up
+in the project (`diff -u <template_dir>/<file> <file>`, until section 13
+gives a better way). Files the template only seeds (`README.md`,
+`config/pipeline_config.yaml`, `DESCRIPTION`, `environment.yml`) are the
+project's from the first edit. Where the project departs from the
+conventions, its README says so under "Project notes".
 
 1. Create the project with the core files only:
 
@@ -786,7 +811,9 @@ take up a later change to the template, compare the two copies
      `R/utils/logging.R`, `config.R`, `data_io.R` (and `validation.R` when
      inputs are checked). Copy `config/pipeline_config.yaml` and fill only
      the sections in use.
-   - First table or figure: `R/utils/tables.R` or `plotting.R`.
+   - First table or figure: `R/utils/tables.R` or `plotting.R`, with the
+     project's own functions in `report_tables.R` or `figures.R` and its
+     colours under `output.colors` in the config.
    - First report: `reports-src/_quarto.yml`, `reports-src/.Rprofile`,
      `reports-src/.gitignore`, the journal's CSL file and `references.bib`.
    - First slides: `reports-src/slides.scss`, `reports-src/logos/` and

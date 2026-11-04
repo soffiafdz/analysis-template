@@ -1,8 +1,9 @@
 # =============================================================================
 # Table Utilities
 # =============================================================================
-# Generic table styling, formatting and saving with gt. Project-specific
-# create_<thing>_table() functions go below the generic section.
+# Shared table styling, formatting and saving with gt, owned by the project
+# template and not edited in projects. Project create_<thing>_table()
+# functions go in R/utils/report_tables.R.
 # =============================================================================
 
 source(here::here("R/utils/data_io.R"))
@@ -603,7 +604,3 @@ style_pdf_table.fn <- function(gt_tbl, size = 14) {
     source_notes.font.size = gt::px(size - 1)
   )
 }
-
-# =============================================================================
-# Project-specific tables: one create_<thing>_table() per manuscript table
-# =============================================================================

@@ -1,10 +1,12 @@
 # =============================================================================
 # Plotting Utilities
 # =============================================================================
-# Generic theme, colours and saving with ggplot2. Project-specific
-# plot_<thing>() functions go below the generic section.
+# Shared theme, colours and saving with ggplot2, owned by the project
+# template and not edited in projects. Project plot_<thing>() functions go
+# in R/utils/figures.R; project colours under output.colors in the config.
 # =============================================================================
 
+source(here::here("R/utils/config.R"))
 source(here::here("R/utils/data_io.R"))
 
 # ----- Color Palettes -----
@@ -13,11 +15,12 @@ source(here::here("R/utils/data_io.R"))
 #'
 #' The single source of colours for every figure, so a variable has the same
 #' colour everywhere. Do not redefine colours in individual plotting
-#' functions; add a named entry here instead.
+#' functions; add a named entry under output.colors in the config, which is
+#' merged over the shared entries here.
 #'
 #' @return Named list of color values
 manuscript_colors <- function() {
-  list(
+  shared.lst <- list(
     female = "#8B0000",        # Dark red
     male = "#191970",          # Midnight blue
     combined = "gray40",
@@ -30,9 +33,9 @@ manuscript_colors <- function() {
     ink_muted = "#737373",
     grid = "#E4E4E4",
     context = "#A6A6A6"
-    # Project entries go here, after a comma: one per group, predictor or
-    # measure, taken from the tol_bright or tol_muted palettes in get_palette
   )
+  project.lst <- get_config("output", "colors", default = list())
+  utils::modifyList(shared.lst, project.lst)
 }
 
 #' Get standard color palette
@@ -283,7 +286,3 @@ plot_comparison <- function(data, x, y, group, ci_lower, ci_upper,
 
   p + ggplot2::coord_flip()
 }
-
-# =============================================================================
-# Project-specific figures: one plot_<thing>() per figure
-# =============================================================================

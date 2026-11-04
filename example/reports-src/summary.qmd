@@ -13,7 +13,7 @@ suppressPackageStartupMessages({
 })
 here::i_am("reports-src/summary.qmd")
 source(here("R/utils/config.R"))
-source(here("R/utils/tables.R"))
+source(here("R/utils/report_tables.R"))
 load_config()
 invisible(list2env(
   readRDS(get_data_path("outputs", "summary_env")), environment()

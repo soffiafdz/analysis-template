@@ -37,8 +37,9 @@ values that do not pass). Two greys close to each other read as one.
 
 ### Data
 
-- Every group, predictor or measure has one named entry in
-  `manuscript_colors()`, taken from Paul Tol's colourblind-safe palettes
+- Every group, predictor or measure has one named entry under
+  `output.colors` in the config, which `manuscript_colors()` merges over
+  its shared entries, taken from Paul Tol's colourblind-safe palettes
   (`get_palette("tol_bright")`, `"tol_muted"`). The same group has the same
   colour in every figure.
 - Sex keeps `female` `#8B0000` and `male` `#191970`. Both are dark, so the

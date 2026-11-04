@@ -26,7 +26,7 @@ source(here("R/utils/logging.R"))
 source(here("R/utils/config.R"))
 source(here("R/utils/data_io.R"))
 source(here("R/utils/validation.R"))
-source(here("R/utils/plotting.R"))
+source(here("R/utils/figures.R"))
 
 log_script_start("02_compare_body_mass.R")
 config <- load_config()

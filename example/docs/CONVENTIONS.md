@@ -113,9 +113,12 @@ derived values are always computed from the raw columns.
 Helpers in `R/utils/` are plain files loaded with `source()`, each sourcing
 its own dependencies. They are documented with roxygen-style `#'` comments.
 `logging.R`, `config.R`, `data_io.R`, `validation.R`, `tables.R` (gt) and
-`plotting.R` (ggplot2) are copied from the project template;
-project-specific functions go at the end of `tables.R` and `plotting.R`, or
-in their own file.
+`plotting.R` (ggplot2) come from the project template and are not edited
+here: a change goes into the template first. This project's functions live
+in their own files: `figures.R` (one `plot_<thing>()` per figure),
+`report_tables.R` (one `create_<thing>_table()` per table) and one file per
+method or construct. Its colours are set under `output.colors` in the
+config, which `manuscript_colors()` merges over the shared entries.
 
 ## Pipeline scripts
 
