@@ -6,7 +6,10 @@ generated from and lists its departures under "Project notes" in its
 README. A change is made here first, tagged, and then taken up in the
 projects that use it.
 
-## Not yet tagged
+## v2026.11 (2026-11-04)
+
+The refactor: one authority, tagged; copier and a Quarto extension deliver
+the files; projects record their tag.
 
 - 2026-11-04. Machine fixes stay out of shared files: a TeX install that
   lacks Libertinus gets `tlmgr install libertinus-fonts` rather than a
