@@ -29,12 +29,17 @@ once and then belong to the project.
 | At the start | `.gitignore`, `.lintr`, `.here`, `.Rprofile`, `environment.yml`, `DESCRIPTION`, `README.project.md` (as `README.md`), `docs/CONVENTIONS.md` |
 | With the first script | `config/pipeline_config.yaml`; `R/utils/logging.R`, `config.R`, `data_io.R`, and `validation.R` once inputs are checked |
 | With the first table or figure | `R/utils/tables.R` (gt), `R/utils/plotting.R` (ggplot2) |
-| With the first report | `reports-src/_quarto.yml`, `.Rprofile`, `.gitignore` |
-| With the first slides | `reports-src/slides.scss`, `logos/` and `screenshot_slides.sh`; for a PowerPoint copy, `slides-reference.pptx` and `build_slides_reference.py` |
+| With the first report | `reports-src/_quarto.yml`, `.Rprofile`, `.gitignore`, and the Quarto extension (`quarto add soffiafdz/r-analysis-template/reports-src@<tag>`, run in `reports-src/`) |
+| With the first slides | `reports-src/screenshot_slides.sh` |
 | Once there is anything to look at | `docs/STYLE.md` |
 
 `README.project.md` is the outline of a project's README. To start a
 project, follow [`GUIDE.md`](GUIDE.md) section 13.
+
+The Quarto extension in `reports-src/_extensions/analysis/` holds the slide
+theme, the fonts, the logos, the PDF settings and the PowerPoint template,
+as three formats: `analysis-revealjs`, `analysis-pdf` and `analysis-pptx`.
+A document declares one of them and nothing else.
 
 ## Versions
 
@@ -72,5 +77,6 @@ and GNU sed takes `-i` alone.
 `GUIDE.md`, `CHANGELOG.md` and this README are licensed under
 [CC BY 4.0](LICENSE-docs). Everything else, including the files copied into
 projects, is under the [MIT licence](LICENSE), except the logos in
-`reports-src/logos/`, which are trademarks of their institutions
-(`reports-src/logos/SOURCES.md`).
+`reports-src/_extensions/analysis/logos/`, which are trademarks of their
+institutions (`SOURCES.md` there) and the IBM Plex Sans fonts beside them,
+under the SIL Open Font License (`fonts/OFL.txt`).

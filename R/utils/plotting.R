@@ -25,7 +25,7 @@ manuscript_colors <- function() {
     male = "#191970",          # Midnight blue
     combined = "gray40",
     reference_line = "gray50",
-    # Slide figures: the slide theme's inks (reports-src/slides.scss), a
+    # Slide figures: the slide theme's inks (the extension's slides.scss), a
     # light grid, and a grey for marks shown as context beside an
     # emphasised one
     ink = "#161616",
@@ -129,13 +129,23 @@ slide_base_size <- function(text_px, dpi) {
 
 #' Register the slides' typeface for figures
 #'
-#' The slides embed IBM Plex Sans from reports-src/fonts/ (SIL Open Font
-#' License). Registering the same files lets ragg draw figure text in the
-#' slides' face, with "bold" set in the semibold, as on the slides.
+#' The slides embed IBM Plex Sans from the fonts/ folder of the template's
+#' Quarto extension (SIL Open Font License), installed by quarto add under
+#' reports-src/_extensions/. Registering the same files lets ragg draw
+#' figure text in the slides' face, with "bold" set in the semibold, as on
+#' the slides.
 #' @param family Family name to register
 #' @return The family name, invisibly
 register_slide_font <- function(family = "IBM Plex Sans") {
-  font_dir <- here::here("reports-src", "fonts")
+  regular.v <- list.files(here::here("reports-src", "_extensions"),
+                          pattern = "^IBMPlexSans-Regular\\.ttf$",
+                          recursive = TRUE, full.names = TRUE)
+  if (length(regular.v) != 1) {
+    stop("IBM Plex Sans found ", length(regular.v), " times under ",
+         "reports-src/_extensions/; install the template's Quarto ",
+         "extension once (GUIDE.md section 8)", call. = FALSE)
+  }
+  font_dir <- dirname(regular.v)
   files.v <- file.path(font_dir, paste0(
     "IBMPlexSans-", c("Regular", "SemiBold", "Italic", "SemiBoldItalic"),
     ".ttf"

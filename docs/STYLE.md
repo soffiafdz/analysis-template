@@ -16,7 +16,8 @@ Colours have one of two jobs, and a colour never does both:
 
 McGill red leads; the Douglas Research Centre and the StoP-AD Centre give
 the secondary colours. For another affiliation, change the variables at the
-top of `reports-src/slides.scss` and the files in `reports-src/logos/`.
+top of `slides.scss` in the Quarto extension and the files in its `logos/`,
+in the template.
 
 | Token | Hex | Source | Used for |
 |---|---|---|---|
@@ -59,8 +60,10 @@ values that do not pass). Two greys close to each other read as one.
   ```
 
   When a project's data palette is fixed by a paper and fails against a
-  brand colour, the project's `slides.scss` sets that secondary colour to
-  ink, and a comment there gives the pair and the distance.
+  brand colour, the deck adds a stylesheet of its own under the format
+  (`theme: [project.scss]`, merged after the extension's) that sets that
+  secondary colour to ink, and a comment there gives the pair and the
+  distance.
 - One mark emphasised among others is ink beside the `context` grey; that
   is emphasis, not a category.
 - A colour used for text, such as a direct label on a line, needs at least
@@ -74,7 +77,7 @@ values that do not pass). Two greys close to each other read as one.
 | Output | Font | Sizes |
 |---|---|---|
 | PDF (xelatex) | Libertinus Serif, Libertinus Sans headings | 10 pt body; tables via `style_pdf_table.fn()` |
-| HTML slides | IBM Plex Sans, embedded from `reports-src/fonts/` (SIL Open Font License), then Helvetica Neue, Arial | in slide pixels: running line 24, caption and table headers 30, body and tables 34, headline 48; title slide: title 80, subtitle 44, name 36, event 32; weights 400 and 600 |
+| HTML slides | IBM Plex Sans, embedded from the extension's `fonts/` (SIL Open Font License), then Helvetica Neue, Arial | in slide pixels: running line 24, caption and table headers 30, body and tables 34, headline 48; title slide: title 80, subtitle 44, name 36, event 32; weights 400 and 600 |
 | PowerPoint | Arial | titles 26 pt bold, body 18 pt, notes 14 pt |
 | Figures | ggplot2 default sans; slide versions in IBM Plex Sans (`register_slide_font()`, drawn by ragg) | `theme_publication()` base size 10 to 12; slide versions at 30 px (`slide_text_px`), tick labels included |
 
@@ -133,7 +136,7 @@ purpose.
 
 ## Slides
 
-### Layout (HTML, `reports-src/slides.scss`)
+### Layout (HTML, `slides.scss` in the Quarto extension)
 
 A 1600 by 900 pixel slide on a 12-column grid with 48 pixel gutters.
 
@@ -233,7 +236,7 @@ Each fault below has turned up in a real deck.
    made) needs one. A colleague's first read is better still.
 4. After each fix, render and screenshot again.
 
-### PowerPoint (`reports-src/slides-reference.pptx`)
+### PowerPoint (`slides-reference.pptx` in the Quarto extension)
 
 The same palette on Arial: a title slide with the red bar and the logos,
 bold ink titles, tables, and notes in small grey text under the table or
@@ -241,7 +244,7 @@ figure.
 
 ### Logos
 
-`reports-src/logos/` holds the logos, with their sources in
+The extension's `logos/` holds the logos, with their sources in
 `SOURCES.md`. They are trademarks of their institutions and are not covered
 by the template's licence. McGill's file is its own reversed wordmark; on
 the red panel the Douglas and StoP-AD logos are drawn in white by a CSS

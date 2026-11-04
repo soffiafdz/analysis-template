@@ -4,10 +4,9 @@ subtitle: "A worked example of the R analysis project template"
 date: today
 date-format: long
 format:
-  # Editable copy of slides.qmd: the same content with tables in place of
-  # the cards, on the template slides-reference.pptx
-  pptx:
-    reference-doc: slides-reference.pptx
+  # Editable copy of slides.qmd: the same content as native tables and
+  # figures, on the extension's slides-reference.pptx
+  analysis-pptx:
     output-file: slides.pptx
 ---
 

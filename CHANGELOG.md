@@ -8,6 +8,15 @@ projects that use it.
 
 ## Not yet tagged
 
+- 2026-11-04. The slide theme, fonts, logos, footer script, PDF settings
+  and PowerPoint template become one Quarto extension,
+  `reports-src/_extensions/analysis/`, installed into a project with
+  `quarto add soffiafdz/r-analysis-template/reports-src@<tag>` and
+  updated with `quarto update`. It contributes `analysis-revealjs`,
+  `analysis-pdf` and `analysis-pptx`, so a document declares one format
+  and `_quarto.yml` keeps only `project:` and `execute:`. The theme gains
+  the vertical-stack rules and the nested-aware footer from mtl-memory-sex.
+  `register_slide_font()` finds the fonts under the installed extension.
 - 2026-11-04. The shared helpers (`config.R`, `logging.R`, `data_io.R`,
   `validation.R`, `tables.R`, `plotting.R`), the settings, the Quarto
   configuration and the slide theme are owned by the template and not

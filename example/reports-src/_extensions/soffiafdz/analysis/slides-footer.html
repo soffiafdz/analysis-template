@@ -1,0 +1,14 @@
+<script>
+  // Slide numbers for the footer (slides.scss): "n / total"
+  // on every slide, counting the slides of vertical stacks in order; a
+  // stack's container is not a slide
+  (function () {
+    var all = document.querySelectorAll(".reveal .slides section");
+    var slides = Array.prototype.filter.call(all, function (section) {
+      return !section.querySelector("section");
+    });
+    slides.forEach(function (slide, i) {
+      slide.setAttribute("data-n", (i + 1) + " / " + slides.length);
+    });
+  })();
+</script>

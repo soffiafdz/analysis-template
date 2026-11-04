@@ -3,6 +3,8 @@ title: "Body mass of Palmer penguins by species and sex"
 subtitle: "A worked example of the R analysis project template"
 date: today
 bibliography: references.bib
+# The template's PDF settings, from its Quarto extension
+format: analysis-pdf
 ---
 
 ```{r}

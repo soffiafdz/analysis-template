@@ -1,23 +1,7 @@
 ---
 pagetitle: "Body mass of Palmer penguins by species and sex"
-format:
-  revealjs:
-    embed-resources: true
-    theme: [default, slides.scss]
-    menu: false
-    width: 1600
-    height: 900
-    margin: 0.06
-    # Each slide is a flex column (slides.scss); figures are drawn at their
-    # area's size, so reveal must not stretch them; the running line
-    # carries the slide number
-    display: flex
-    auto-stretch: false
-    slide-number: false
-    progress: false
-    include-after-body: slides-footer.html
-    # IBM Plex Sans, embedded from reports-src/fonts/
-    css: fonts/plex.css
+# The template's slide theme, from its Quarto extension (docs/STYLE.md)
+format: analysis-revealjs
 ---
 
 ```{r}
@@ -78,9 +62,9 @@ stopifnot(
 :::
 
 ::: {.logos}
-![](logos/mcgill.svg){.mcgill fig-alt="McGill University"}
-![](logos/douglas.png){.douglas .mono fig-alt="Douglas Research Centre"}
-![](logos/stopad.png){.stopad .mono fig-alt="StoP-AD Centre"}
+![](_extensions/soffiafdz/analysis/logos/mcgill.svg){.mcgill fig-alt="McGill University"}
+![](_extensions/soffiafdz/analysis/logos/douglas.png){.douglas .mono fig-alt="Douglas Research Centre"}
+![](_extensions/soffiafdz/analysis/logos/stopad.png){.stopad .mono fig-alt="StoP-AD Centre"}
 :::
 
 ## How much heavier are males, and does it depend on the species? {data-part="Question and data"}

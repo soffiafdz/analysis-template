@@ -149,8 +149,9 @@ project/
 │   ├── scripts/              # NN_verb_object.R, run in numeric order
 │   └── utils/                # sourced helper modules (section 5)
 ├── reports-src/              # .qmd sources, _quarto.yml, references.bib, CSL;
-│                             # .Rprofile points Quarto's R at renv; slide
-│                             # theme and PowerPoint template (section 8)
+│   │                         # .Rprofile points Quarto's R at renv
+│   └── _extensions/          # the template's Quarto extension: slide theme,
+│                             # fonts, logos, PDF and PowerPoint settings (8)
 ├── docs/                     # this file, audits and their check scripts
 ├── data/                     # gitignored
 │   ├── archive/              # compressed copy of each original release
@@ -373,7 +374,8 @@ modules:
   embeds the fonts; PNGs with `ragg::agg_png`, which draws fonts
   registered with systemfonts.
 - Slide figures: `register_slide_font()` registers the IBM Plex Sans files
-  in `reports-src/fonts/`, which the deck embeds; `theme_slide(base_size)`
+  of the Quarto extension (section 8), which the deck embeds;
+  `theme_slide(base_size)`
   sets figures in that face
   with a recessive grid and the slide inks of `manuscript_colors()`;
   `slide_base_size(output.slide_text_px, output.slide_dpi)` gives the base
@@ -520,13 +522,16 @@ log_script_end("NN_verb_object.R", success = TRUE)
   rendering.
 - **`reports-src/_quarto.yml`:** `output-dir: ../outputs/reports`,
   `execute-dir: project`; `echo`, `warning` and `message` all false; an
-  explicit render list.
-- **Render to PDF:** `cd reports-src && quarto render <file>.qmd --to pdf`
-  (xelatex). Word copies for journals are converted from the rendered output.
-  `_quarto.yml` sets the PDF defaults: Libertinus fonts (shipped with TeX
-  Live, with Greek letters), a table of contents and numbered sections. A
-  minimal TeX install such as TinyTeX needs
-  `tlmgr install libertinus-fonts`.
+  explicit render list. Nothing else: the formats come from the template's
+  Quarto extension (below).
+- **Render to PDF:** the document declares `format: analysis-pdf`, then
+  `cd reports-src && quarto render <file>.qmd` (xelatex). Word copies for
+  journals are converted from the rendered output. The format sets the PDF
+  defaults: Libertinus fonts (shipped with TeX Live, with Greek letters), a
+  table of contents and numbered sections. A minimal TeX install such as
+  TinyTeX needs `tlmgr install libertinus-fonts`; a machine that lacks the
+  fonts gets them installed, and the format is not edited to use another
+  face.
 - **Tables in the PDF:** pass gt tables through `style_pdf_table.fn()`. If
   one still overflows, shorten its row labels in the document (and say so in
   the source note) rather than shrinking the text further.
@@ -539,40 +544,52 @@ log_script_end("NN_verb_object.R", success = TRUE)
 - **Prose style:** no em-dashes (use a semicolon, a colon or a new sentence).
   Avoid stock openers such as "Of note" or "It is worth noting".
 
+### The Quarto extension
+
+The look of every document comes from one Quarto extension, kept in the
+template at `reports-src/_extensions/analysis/` and installed into a
+project from `reports-src/` at a tag:
+
+```sh
+cd reports-src
+quarto add soffiafdz/r-analysis-template/reports-src@v2026.11
+```
+
+It lands in `reports-src/_extensions/soffiafdz/analysis/` and is
+committed, as Quarto intends; `quarto update` with a later tag takes a
+newer one. The folder is the template's (section 5): a change to the
+theme is made in the template, tagged and then updated here. The
+extension contributes three formats, so a document declares one line and
+nothing else:
+
+| Format | Carries |
+|---|---|
+| `analysis-revealjs` | the slide theme (`slides.scss`), the 1600 by 900 slide, flex layout without auto-stretch, the footer script that numbers the slides, IBM Plex Sans embedded from `fonts/`, `embed-resources` |
+| `analysis-pdf` | xelatex, the Libertinus fonts, a table of contents, numbered sections, margins and type size |
+| `analysis-pptx` | the PowerPoint template `slides-reference.pptx` |
+
+A document can still add its own `css`, `theme` or `include-after-body`
+under the format; Quarto merges them with the extension's rather than
+replacing them, so a project departure is one more file beside the deck,
+not an edited theme.
+
 ### Slides
 
 Slides take their numbers from the same environment file as the report. They
 exist as two Quarto files, because the HTML layout does not survive
 conversion to PowerPoint:
 
-- **`slides.qmd`, the designed deck:** self-contained HTML (revealjs) with
-  the theme in `reports-src/slides.scss` and the logos in
-  `reports-src/logos/`. The title page is written by hand, so the YAML
+- **`slides.qmd`, the designed deck:** self-contained HTML (revealjs) in
+  the extension's theme. The title page is written by hand, so the YAML
   gives `pagetitle` (the browser tab) and no `title`.
 
   ```yaml
   pagetitle: "Short title"
-  format:
-    revealjs:
-      embed-resources: true
-      theme: [default, slides.scss]
-      menu: false
-      width: 1600
-      height: 900
-      margin: 0.06
-      # Each slide is a flex column (slides.scss); figures are drawn at
-      # their area's size, so reveal must not stretch them; the running
-      # line carries the slide number
-      display: flex
-      auto-stretch: false
-      slide-number: false
-      progress: false
-      include-after-body: slides-footer.html
-      # IBM Plex Sans, embedded from reports-src/fonts/
-      css: fonts/plex.css
+  format: analysis-revealjs
   ```
 
-  The title page, one text block beside the red logo panel:
+  The title page, one text block beside the red logo panel, with the logos
+  from the installed extension:
 
   ```markdown
   ## {.title-page}
@@ -586,9 +603,9 @@ conversion to PowerPoint:
   :::
 
   ::: {.logos}
-  ![](logos/mcgill.svg){.mcgill fig-alt="McGill University"}
-  ![](logos/douglas.png){.douglas .mono fig-alt="Douglas Research Centre"}
-  ![](logos/stopad.png){.stopad .mono fig-alt="StoP-AD Centre"}
+  ![](_extensions/soffiafdz/analysis/logos/mcgill.svg){.mcgill fig-alt="McGill University"}
+  ![](_extensions/soffiafdz/analysis/logos/douglas.png){.douglas .mono fig-alt="Douglas Research Centre"}
+  ![](_extensions/soffiafdz/analysis/logos/stopad.png){.stopad .mono fig-alt="StoP-AD Centre"}
   :::
   ```
 
@@ -613,6 +630,13 @@ conversion to PowerPoint:
   phrase boundary, in headlines, captions, statements, table headers
   (`escape = FALSE`) and the title and closing slides.
 
+  A long deck may use reveal's vertical stacks: a `#` heading opens a
+  stack and is its lead slide, and the `##` slides under it go below it.
+  The theme frames those slides like the top-level ones, and the footer
+  numbers every slide in order. A full-width table over two statements
+  (`:::: {.split .half .below}` inside `::: {.halves}`) aligns its second
+  column with the right-hand statement.
+
   `[...]{.statement}` is a sentence led by a bold number or phrase;
   `[...]{.caption}` is the one grey line under the body; `::: {.notes}`
   holds what the speaker needs but the room does not read. Tables are
@@ -632,8 +656,7 @@ conversion to PowerPoint:
 
   ```yaml
   format:
-    pptx:
-      reference-doc: slides-reference.pptx
+    analysis-pptx:
       output-file: slides.pptx
   ```
 
@@ -652,9 +675,10 @@ A change to the slides' content is made in both files. Check the PowerPoint
 in PowerPoint itself; its layout cannot be judged from the file, and
 LibreOffice may lay it out differently.
 
-The template is built by `reports-src/build_slides_reference.py` from
-pandoc's default (Python with python-pptx, outside renv). Re-run it from
-`reports-src/` only to change the template; the `.pptx` is committed.
+The PowerPoint template is built by `reports-src/build_slides_reference.py`
+in the template repository, from pandoc's default (Python with python-pptx,
+outside renv), into the extension folder. Re-run it from `reports-src/`
+only to change the template; the `.pptx` is committed with the extension.
 
 ---
 
@@ -741,7 +765,8 @@ pandoc's default (Python with python-pptx, outside renv). Re-run it from
 | A mixture-model grid fitted with 100 starts missed better solutions for some models | Re-fit with more starts; keep a solution both searches reach (10) |
 | `quarto render` could not find knitr, then `here()` pointed at `reports-src/` | `reports-src/.Rprofile` for renv; `here::i_am()` in each document (8) |
 | A sentence starting with an inline number turned into a numbered list item | Never start a line with inline R that prints a number (8) |
-| "APOE ε4" printed with a blank for ε in the PDF | Libertinus fonts in `_quarto.yml` (8) |
+| "APOE ε4" printed with a blank for ε in the PDF | Libertinus fonts in the extension's PDF format (8) |
+| Two projects swapped the PDF font for one at a macOS path because their TeX install lacked Libertinus, and dropped `ragg` and `systemfonts` from DESCRIPTION | A missing font is installed (`tlmgr`), never worked around in shared files (8, 2) |
 | Slides converted to PowerPoint lost their layout | A separate PowerPoint deck on its own template (8) |
 | A yellow line label was unreadable on white | 3:1 contrast for coloured text (docs/STYLE.md) |
 | A deck had values broken over two lines, "1,204 of 1,204", small left-aligned tables and a list of scripts | The faults table and a screenshot of every slide (docs/STYLE.md, 8) |
@@ -817,10 +842,10 @@ under "Project notes".
      project's own functions in `report_tables.R` or `figures.R` and its
      colours under `output.colors` in the config.
    - First report: `reports-src/_quarto.yml`, `reports-src/.Rprofile`,
-     `reports-src/.gitignore`, the journal's CSL file and `references.bib`.
-   - First slides: `reports-src/slides.scss`, `reports-src/logos/` and
-     `screenshot_slides.sh`; for a PowerPoint copy also
-     `slides-reference.pptx` and `build_slides_reference.py` (section 8).
+     `reports-src/.gitignore`, the journal's CSL file and `references.bib`,
+     and the Quarto extension (`quarto add` from `reports-src/`, section
+     8), which also carries the slide theme and the PowerPoint template.
+   - First slides: `reports-src/screenshot_slides.sh`.
    - `docs/STYLE.md` with `CONVENTIONS.md` once there is anything to look
      at.
    - Folders under `data/`, `models/`, `outputs/` and `logs/` are created by

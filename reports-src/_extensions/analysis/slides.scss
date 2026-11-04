@@ -69,8 +69,8 @@ $body-bg: #ffffff;
 $body-color: $ink;
 $link-color: $douglas-blue;
 $code-color: $ink-2;
-// IBM Plex Sans (SIL Open Font License), embedded from reports-src/fonts/
-// through fonts/plex.css; the figures use the same files
+// IBM Plex Sans (SIL Open Font License), embedded from the extension's
+// fonts/ through fonts/plex.css; the figures use the same files
 $font-family-sans-serif: "IBM Plex Sans", "Helvetica Neue", Helvetica,
   Arial, sans-serif;
 $presentation-font-size-root: $fs-body;
@@ -446,4 +446,79 @@ $bleed: 400px;
 }
 .reveal .logos img.mono {
   filter: brightness(0) invert(1);
+}
+
+// --- Vertical stacks -----------------------------------------------------------
+// A # heading opens a reveal stack: its lead slide, with the ## slides
+// under it below. Reveal nests those slides one level deeper, so the slide
+// frame and the running line, written for top-level slides, are repeated
+// for them here.
+// A stack is only a container: no frame of its own
+.reveal .slides > section.stack {
+  padding-bottom: 0;
+}
+
+// Slide frame of nested slides (Slide frame, above)
+.reveal .slides > section > section {
+  height: 100%;
+  box-sizing: border-box;
+  flex-direction: column;
+  padding-bottom: $foot;
+}
+
+// Running line of nested slides (Running line, above)
+.reveal .slides > section > section[data-part]::after,
+.reveal .slides > section > section[data-n]::before {
+  position: absolute;
+  bottom: 0;
+  font-size: $fs-run;
+  line-height: 1;
+  font-weight: $weight-strong;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: $ink-3;
+  font-variant-numeric: tabular-nums;
+}
+.reveal .slides > section > section[data-part]::after {
+  content: attr(data-part);
+  left: 0;
+  right: 0;
+  padding-top: $run-gap;
+  border-top: 1px solid $rule;
+}
+.reveal .slides > section > section[data-n]::before {
+  content: attr(data-n);
+  right: 0;
+  letter-spacing: 0.04em;
+  z-index: 1;
+}
+
+// The closing slide is a # heading (top level, after the last stack); its
+// empty heading is hidden like the title page's h2
+.reveal .slides > section.title-page > h1 {
+  display: none;
+}
+
+// A stack's lead slide carries its headline as h1: set like h2. Quarto
+// classes level-1 slides .title-slide, whose h1 reveal sets at 1.6em, so
+// the selector names that class
+.reveal .slides section.title-slide.level1 > h1 {
+  font-size: $fs-head;
+  margin: 0 0 $space-6;
+  text-wrap: balance;
+  white-space: nowrap;
+}
+
+// A full-width table over two statements (.split.half.below, wrapped in
+// ::: {.halves}): its second column's text starts where the right
+// statement does, half the body width plus half the gutter, less the
+// cell's left padding: (1502 / 2 - 24) / 1502 of the width. A percentage,
+// as Firefox ignores calc() with percentages on table columns
+.reveal .halves table {
+  width: 100%;
+  table-layout: fixed;
+}
+.reveal .halves table td:first-child,
+.reveal .halves table th:first-child {
+  width: 48.4%;
 }

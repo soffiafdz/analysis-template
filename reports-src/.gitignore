@@ -1,9 +1,9 @@
 /.quarto/
 *.html
-# Source, not output: the slide footer script the deck includes
-!slides-footer.html
+# Source, not output: the slide footer script of the template's extension
+!_extensions/**/slides-footer.html
 # The fonts' licence travels with them, should *.txt be ignored as data
-!fonts/OFL.txt
+!_extensions/**/OFL.txt
 *_files/
 
 **/*.quarto_ipynb

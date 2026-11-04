@@ -44,7 +44,7 @@ Then render the documents:
 
 ```sh
 cd reports-src
-quarto render summary.qmd --to pdf
+quarto render summary.qmd
 quarto render slides.qmd
 quarto render slides-pptx.qmd
 ```
@@ -55,5 +55,6 @@ quarto render slides-pptx.qmd
   without running anything. The data are public, so the reason for keeping
   `outputs/` out of version control does not apply.
 - There is no input file: script 01 reads the data from R.
-- The PowerPoint template `reports-src/slides-reference.pptx` is used as it
-  comes from the template, so its build script is not copied.
+- The template's Quarto extension was copied from the parent folder into
+  `reports-src/_extensions/soffiafdz/analysis/`, the path `quarto add`
+  gives, instead of being installed from GitHub.

@@ -23,12 +23,12 @@ from pptx.oxml.ns import qn
 from pptx.oxml.shapes.picture import CT_Picture
 from pptx.util import Emu
 
-OUTPUT = "slides-reference.pptx"
+OUTPUT = "_extensions/analysis/slides-reference.pptx"
 INK, SOFT, MUTED = "1A1A1A", "4A4A4A", "5C5C5C"
 RED, TEAL = "ED1B2F", "1A6C7A"  # McGill red, StoP-AD teal (docs/STYLE.md)
 # PNG, as PowerPoint shows SVG only from 2016 on; mcgill.png is the reversed
 # wordmark on its red box
-LOGOS = ["logos/mcgill.png", "logos/douglas.png", "logos/stopad.png"]
+LOGOS = [f"_extensions/analysis/logos/{f}.png" for f in ("mcgill", "douglas", "stopad")]
 A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"
 
 # Geometry in EMU on pandoc's 16:9 slide (10 x 5.625 in)
