@@ -8,6 +8,10 @@ projects that use it.
 
 ## Not yet tagged
 
+- 2026-11-04. Machine fixes stay out of shared files: a TeX install that
+  lacks Libertinus gets `tlmgr install libertinus-fonts` rather than a
+  different font in the PDF format, and `ragg` and `systemfonts` stay in
+  `DESCRIPTION` (CONVENTIONS, GUIDE sections 8 and 12).
 - 2026-11-04. GUIDE section 13 rewritten: a project starts with
   `copier copy`, renv init and `quarto add`; "template first" (13.2) says
   how a general change is made, tagged and then taken up in each project

@@ -135,7 +135,10 @@ The last pipeline script gathers every number the text needs into
 `outputs/<document>_env.rds`. The Quarto document loads that file and does no
 analysis of its own; numbers in the text come from inline R. After a change
 upstream, that script is re-run before rendering. Documents render to PDF
-with xelatex.
+with xelatex in the template's formats (`format: analysis-pdf`), set in
+the Libertinus fonts; a TeX install that lacks them gets
+`tlmgr install libertinus-fonts`, and the format is not changed. `ragg`
+and `systemfonts` stay in `DESCRIPTION`: the slide figures need them.
 
 Captions start with a short bold title ending in a full stop, followed by
 the details. Captions that contain numbers are built with
