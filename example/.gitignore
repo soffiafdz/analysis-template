@@ -4,8 +4,10 @@
 /outputs/*
 # Rendered reports are tracked here (README, Project notes)
 !/outputs/reports/
-# Quarto copies the logos next to the deck, which embeds them anyway
+# Quarto copies the logos and the extension next to the deck, which embeds
+# them anyway
 /outputs/reports/logos/
+/outputs/reports/_extensions/
 /logs/
 /archive/
 /submission/
