@@ -1,0 +1,36 @@
+# Copier template. `copier copy gh:soffiafdz/r-analysis-template <project>`
+# generates a project's tool-facing files from template/ at the latest tag
+# (GUIDE.md section 13); `copier update` moves a project to a later tag.
+_min_copier_version: "9.0.0"
+_subdirectory: template
+_answers_file: .copier-answers.yml
+# Seeded once, then the project's
+_skip_if_exists:
+  - README.md
+  - config/pipeline_config.yaml
+_message_after_copy: |
+  Next (GUIDE.md section 13): create the environment, initialise renv, and
+  install the Quarto extension from reports-src/:
+    quarto add soffiafdz/r-analysis-template/extension@{{ _copier_answers._commit }}
+
+template_url:
+  type: str
+  default: https://github.com/soffiafdz/r-analysis-template
+  when: false
+
+env_name:
+  type: str
+  help: Name of the conda environment (environment.yml)
+  validator: >-
+    {% if not env_name | regex_search('^[a-z][a-z0-9_]*$') %}
+    Lowercase letters, digits and underscores, starting with a letter
+    {% endif %}
+
+package_name:
+  type: str
+  help: Package name in DESCRIPTION
+  default: "{{ env_name | replace('_', '.') }}"
+  validator: >-
+    {% if not package_name | regex_search('^[A-Za-z][A-Za-z0-9.]*[A-Za-z0-9]$') %}
+    Letters, digits and dots, starting with a letter and not ending in a dot
+    {% endif %}

@@ -17,11 +17,16 @@ What the project asks, with which data and methods, in one paragraph.
 
 ```sh
 micromamba create -f environment.yml
-micromamba activate ENV_NAME
+micromamba activate {{ env_name }}
 Rscript -e 'renv::restore()'
 ```
 
-Conventions: [`docs/CONVENTIONS.md`](docs/CONVENTIONS.md).
+Conventions: the
+[R analysis project template]({{ template_url }}/tree/{{ _copier_answers._commit }})
+at tag `{{ _copier_answers._commit }}`
+([CONVENTIONS]({{ template_url }}/blob/{{ _copier_answers._commit }}/docs/CONVENTIONS.md),
+[STYLE]({{ template_url }}/blob/{{ _copier_answers._commit }}/docs/STYLE.md));
+`.copier-answers.yml` records the tag.
 
 ## Pipeline
 
@@ -32,4 +37,4 @@ Run from the project root, in order:
 
 ## Project notes
 
-Deliberate differences from `docs/CONVENTIONS.md`, with reasons.
+Deliberate differences from the template's conventions, with reasons.

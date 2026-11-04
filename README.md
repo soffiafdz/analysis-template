@@ -18,28 +18,25 @@ once and then belong to the project.
 | File | Contents |
 |---|---|
 | [`GUIDE.md`](GUIDE.md) | The full guide, with the reasoning behind each choice; stays here |
-| [`docs/CONVENTIONS.md`](docs/CONVENTIONS.md) | The short version that goes into each project |
+| [`docs/CONVENTIONS.md`](docs/CONVENTIONS.md) | The short version, which projects link to at a tag |
 | [`docs/STYLE.md`](docs/STYLE.md) | The look of reports, figures, tables and slides |
 | [`CHANGELOG.md`](CHANGELOG.md) | What changed and when, by tag |
 
 ## Parts
 
-| Copied | Files |
-|---|---|
-| At the start | `.gitignore`, `.lintr`, `.here`, `.Rprofile`, `environment.yml`, `DESCRIPTION`, `README.project.md` (as `README.md`), `docs/CONVENTIONS.md` |
-| With the first script | `config/pipeline_config.yaml`; `R/utils/logging.R`, `config.R`, `data_io.R`, and `validation.R` once inputs are checked |
-| With the first table or figure | `R/utils/tables.R` (gt), `R/utils/plotting.R` (ggplot2) |
-| With the first report | `reports-src/_quarto.yml`, `.Rprofile`, `.gitignore`, and the Quarto extension (`quarto add soffiafdz/r-analysis-template/reports-src@<tag>`, run in `reports-src/`) |
-| With the first slides | `reports-src/screenshot_slides.sh` |
-| Once there is anything to look at | `docs/STYLE.md` |
+Two tools deliver the parts, each from a tag (`vYYYY.MM`):
 
-`README.project.md` is the outline of a project's README. To start a
-project, follow [`GUIDE.md`](GUIDE.md) section 13.
+| Tool | Delivers | Command, in the project |
+|---|---|---|
+| [copier](https://copier.readthedocs.io) | `template/`: `.gitignore`, `.lintr`, `.here`, `.Rprofile`, `environment.yml`, `DESCRIPTION`, the README outline, `config/pipeline_config.yaml`, `R/utils/` (the shared helpers), `reports-src/` (`_quarto.yml`, `.Rprofile`, `.gitignore`, `screenshot_slides.sh`) | `copier copy gh:soffiafdz/r-analysis-template .` once; `copier update` later |
+| `quarto add` | `extension/`: the Quarto extension with the slide theme, the fonts, the logos, the PDF settings and the PowerPoint template, as the formats `analysis-revealjs`, `analysis-pdf` and `analysis-pptx` | `quarto add soffiafdz/r-analysis-template/extension@<tag>` in `reports-src/`; `quarto update` later |
 
-The Quarto extension in `reports-src/_extensions/analysis/` holds the slide
-theme, the fonts, the logos, the PDF settings and the PowerPoint template,
-as three formats: `analysis-revealjs`, `analysis-pdf` and `analysis-pptx`.
-A document declares one of them and nothing else.
+copier asks for the environment name and the DESCRIPTION package name,
+records the tag in `.copier-answers.yml`, and merges a later tag's changes
+three-way. `README.md` and `config/pipeline_config.yaml` are generated once
+and then belong to the project; the rest is the template's (`GUIDE.md`
+section 5). A document declares one of the three formats and nothing else.
+To start a project, follow [`GUIDE.md`](GUIDE.md) section 13.
 
 ## Versions
 
@@ -77,6 +74,6 @@ and GNU sed takes `-i` alone.
 `GUIDE.md`, `CHANGELOG.md` and this README are licensed under
 [CC BY 4.0](LICENSE-docs). Everything else, including the files copied into
 projects, is under the [MIT licence](LICENSE), except the logos in
-`reports-src/_extensions/analysis/logos/`, which are trademarks of their
+`extension/_extensions/analysis/logos/`, which are trademarks of their
 institutions (`SOURCES.md` there) and the IBM Plex Sans fonts beside them,
 under the SIL Open Font License (`fonts/OFL.txt`).

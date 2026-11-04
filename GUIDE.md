@@ -547,12 +547,12 @@ log_script_end("NN_verb_object.R", success = TRUE)
 ### The Quarto extension
 
 The look of every document comes from one Quarto extension, kept in the
-template at `reports-src/_extensions/analysis/` and installed into a
-project from `reports-src/` at a tag:
+template at `extension/_extensions/analysis/` and installed into a
+project's `reports-src/` at a tag:
 
 ```sh
 cd reports-src
-quarto add soffiafdz/r-analysis-template/reports-src@v2026.11
+quarto add soffiafdz/r-analysis-template/extension@v2026.11
 ```
 
 It lands in `reports-src/_extensions/soffiafdz/analysis/` and is
@@ -675,9 +675,9 @@ A change to the slides' content is made in both files. Check the PowerPoint
 in PowerPoint itself; its layout cannot be judged from the file, and
 LibreOffice may lay it out differently.
 
-The PowerPoint template is built by `reports-src/build_slides_reference.py`
+The PowerPoint template is built by `extension/build_slides_reference.py`
 in the template repository, from pandoc's default (Python with python-pptx,
-outside renv), into the extension folder. Re-run it from `reports-src/`
+outside renv), into the extension folder. Re-run it from `extension/`
 only to change the template; the `.pptx` is committed with the extension.
 
 ---

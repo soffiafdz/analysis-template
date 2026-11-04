@@ -9,7 +9,7 @@ and Content with Caption (a table or figure with a short note, which goes
 under it in small grey text).
 
 Run from reports-src/ after changing it:
-    python build_slides_reference.py
+    python build_slides_reference.py   (from extension/)
 Needs Quarto (for pandoc's default template) and python-pptx.
 """
 import io
