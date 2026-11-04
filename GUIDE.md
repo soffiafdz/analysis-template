@@ -154,9 +154,9 @@ project/
 ├── docs/                     # this file, audits and their check scripts
 ├── data/                     # gitignored
 │   ├── archive/              # compressed copy of each original release
-│   ├── raw/                  # original data as received; read-only
-│   ├── external/             # reference data from other sources
-│   └── derivatives/          # everything the pipeline derives from raw
+│   ├── inputs/<source>/      # everything taken in and never modified,
+│   │                         # one folder per source; read-only
+│   └── derivatives/          # everything the pipeline builds
 ├── models/{fits,results,diagnostics}/   # gitignored
 ├── outputs/{figures,tables,reports}/    # gitignored
 ├── logs/                     # gitignored; one log file per R process
@@ -166,15 +166,36 @@ project/
 
 Two things called "archive" serve different purposes:
 - `data/archive/` holds the untouched original data releases, compressed
-  (`.tar.zst`). It is the copy to restore from if `data/raw/` is damaged.
+  (`.tar.zst`). It is the copy to restore from if `data/inputs/` is damaged.
 - `archive/` at the root holds dated snapshots of *results*, taken before
   re-runs that change them.
 
-### 3.1 Raw data
+### 3.1 Inputs
 
-`data/raw/` is read-only (`chmod -R a-w data/raw`). Scripts read from it and
-write to `data/derivatives/`. Dated file names of raw releases appear in one
-place only: `config/pipeline_config.yaml`.
+`data/inputs/` holds everything the project takes in and never modifies
+(the YODA principles' `inputs/`): raw data releases and other pipelines'
+outputs alike, one folder per source (`preventad-release-n387/`,
+`prevad-imaging/`, `adni-fnihbc/`). A raw release and a colleague's derived
+table are the same thing to this project, something it reads and does not
+own, so they are not split into "raw" and "external". `data/derivatives/`
+holds only what this project builds. The folder is read-only
+(`chmod -R a-w data/inputs`); scripts read from it and write to
+`data/derivatives/`. The file names appear in one place only:
+`config/pipeline_config.yaml`, under `data: inputs:`.
+
+Files keep their received names when the name says the source, the content
+and a date or version (`PREVENT-AD_internal_n387__Demographics.csv`).
+Otherwise (`visits.tsv`, `full_detailed_volumes.tsv`) they are renamed to
+`<cohort>_<content>[_<tool-version>]_<ISO date>`, and the config comment
+beside the entry records the original name:
+
+```yaml
+data:
+  inputs:
+    # prevad-imaging, from Rorqual (date: when the file was copied)
+    # hvr-cnn 0.1.0-rc2 volumes; was full_detailed_volumes.tsv
+    hvr_volumes: data/inputs/prevad-imaging/preventad_hvr-cnn-0.1.0-rc2_volumes_2026-10-15.tsv
+```
 
 To archive a release:
 
@@ -214,7 +235,7 @@ Scripts contain no paths and no analysis parameters.
 |---|---|---|
 | `general` | `project_name`, `random_seed`, `log_level`, `n_cores` | `get_config("general", ...)`, `set_seed()` |
 | `paths` | directory layout | `get_config("paths", ...)` |
-| `data` | every input and output file, grouped `raw`, `external`, `derivatives`, `models`, `outputs` | `get_data_path(group, key)` |
+| `data` | every input and output file, grouped `inputs`, `derivatives`, `models`, `outputs` | `get_data_path(group, key)` |
 | `parameters` | analysis parameters: variable names, labels, thresholds, specification switches | `get_parameter(...)` |
 | method sections | estimator and optimizer settings, one section per method | `get_config("<method>", ...)` |
 | `output` | table and figure formats, DPI, sizes, journal limits | `get_config("output", ...)` |
@@ -222,8 +243,9 @@ Scripts contain no paths and no analysis parameters.
 | `packages` | required and optional packages | `validate_packages()` |
 
 Rules, and why:
-- **Dated raw file names live only in the config.** When a new release
-  arrives, one line changes.
+- **Input file names live only in the config**, with a comment giving the
+  source and date of each group. When a new release arrives, one line
+  changes.
 - **One loader per derived variable.** If several scripts need the same
   variable, one function reads it, with the column name taken from the
   config. Repeated `fread(select = ...)` calls drift apart, and a renamed
@@ -258,7 +280,7 @@ Shared modules, identical across projects:
 - `get_seed()`, `set_seed()`.
 - `validate_config(config = NULL)`: requires the sections `general`, `data`,
   `parameters` and `scripts`, plus `general.random_seed` and the `data`
-  groups `raw`, `derivatives` and `models`.
+  groups `inputs`, `derivatives` and `models`.
 - Project-specific lookups (canonical factor levels, timepoint labels) are
   added at the end of a project's copy, reading their values from the config.
 
@@ -631,7 +653,7 @@ pandoc's default (Python with python-pptx, outside renv). Re-run it from
 - **Investigations** are written up in `docs/<topic>_audit.md`, with a
   companion `docs/<topic>_check.R` that reproduces every number in the write-up
   when run from the project root.
-- **Derived variables in external releases** (scores, composites) are
+- **Derived variables supplied with a data release** (scores, composites) are
   recomputed from their inputs where possible, and a check asserts agreement
   with the released version. Released derived variables can be wrong, and
   this check is how such errors are found.

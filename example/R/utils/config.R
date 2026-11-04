@@ -52,7 +52,7 @@ get_config <- function(..., default = NULL) {
 
 #' Get data path from configuration
 #'
-#' @param ... Path keys (e.g., "processed", "covars_fst")
+#' @param ... Path keys (e.g., "inputs", "demographics")
 #' @return Full path to data file
 get_data_path <- function(...) {
   rel_path <- get_config("data", ...)
@@ -125,7 +125,7 @@ validate_config <- function(config = NULL) {
   }
 
   # Required data paths
-  required_data.v <- c("raw", "derivatives", "models")
+  required_data.v <- c("inputs", "derivatives", "models")
   missing_data.v <- setdiff(required_data.v, names(config$data))
   if (length(missing_data.v) > 0) {
     stop("Missing required data sections: ",

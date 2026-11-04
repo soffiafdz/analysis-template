@@ -15,10 +15,12 @@ paths:
   logs: logs
 
 # Every input and output file, relative to the project root.
-# Dated raw file names appear here and nowhere else.
 data:
-  raw: {}
-  external: {}
+  # Inputs: taken in and never modified, one folder per source
+  # (data/inputs/<source>/). Names as received, except files whose name gave
+  # no source, content or date (original name in the comment). Input file
+  # names appear here and nowhere else.
+  inputs: {}
   derivatives: {}
   models: {}
   outputs: {}

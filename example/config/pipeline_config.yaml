@@ -8,8 +8,8 @@ general:
 
 # Every input and output file, relative to the project root.
 data:
-  # The data ship with R (datasets::penguins); there is no raw file
-  raw: {}
+  # The data ship with R (datasets::penguins); there is no input file
+  inputs: {}
   derivatives:
     penguins: data/derivatives/penguins.rds
   models:

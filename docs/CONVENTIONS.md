@@ -62,13 +62,18 @@ R/scripts/                    pipeline scripts, NN_verb_object.R
 R/utils/                      helper functions sourced by the scripts
 reports-src/                  Quarto sources and references
 docs/                         this file, audits and their check scripts
-data/raw/                     data as received; read-only (not tracked)
-data/derivatives/             data derived by the pipeline (not tracked)
+data/inputs/<source>/         data taken in and never modified, one folder
+                              per source; read-only (not tracked)
+data/derivatives/             data this project builds (not tracked)
 models/, outputs/, logs/      results, figures, tables, logs (not tracked)
 ```
 
-Untracked folders are created by the code on first write. Original data
-releases are kept compressed in `data/archive/` as the copy to restore from.
+Untracked folders are created by the code on first write. `data/inputs/`
+holds raw releases and other pipelines' outputs alike; files keep their
+received names when the name says source, content and date or version,
+and are otherwise renamed to `<cohort>_<content>[_<tool-version>]_<date>`
+with the original name noted in the config. Original data releases are
+kept compressed in `data/archive/` as the copy to restore from.
 Results are shared outside the approved team only as aggregates, after
 checking them against the data use agreement; this is why `outputs/` is not
 tracked.
@@ -77,10 +82,10 @@ tracked.
 
 Every file path and analysis parameter lives in
 `config/pipeline_config.yaml`, read through `R/utils/config.R`
-(`get_data_path()`, `get_parameter()`, `get_config()`). Dated file names of
-data releases appear there and nowhere else, so a new release changes one
-line. Alternative analysis specifications are switches in the config rather
-than code edits, which keeps earlier results reproducible.
+(`get_data_path()`, `get_parameter()`, `get_config()`). Input file names
+appear there and nowhere else, under `data: inputs:`, so a new release
+changes one line. Alternative analysis specifications are switches in the
+config rather than code edits, which keeps earlier results reproducible.
 
 Scripts skip work whose output already exists. To re-run one, set its flag
 under `scripts.force_regenerate` to `true`, run it, and set it back. Outputs

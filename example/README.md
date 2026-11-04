@@ -54,6 +54,6 @@ quarto render slides-pptx.qmd
 - Rendered reports are tracked in `outputs/reports/`, so they can be read
   without running anything. The data are public, so the reason for keeping
   `outputs/` out of version control does not apply.
-- There is no raw data file: script 01 reads the data from R.
+- There is no input file: script 01 reads the data from R.
 - The PowerPoint template `reports-src/slides-reference.pptx` is used as it
   comes from the template, so its build script is not copied.

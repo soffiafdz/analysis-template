@@ -6,7 +6,8 @@ What the project asks, with which data and methods, in one paragraph.
 
 - Source: study, release name and date.
 - Access: how to apply, under a data use agreement. The data are not part of
-  this repository.
+  this repository; `config/pipeline_config.yaml` names every file under
+  `data/inputs/`, one folder per source.
 - Data dictionary: public at URL, or distributed with the data.
 - Sharing results: only aggregate results leave the approved team; cells
   with fewer than N participants are suppressed (per the data use
