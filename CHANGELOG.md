@@ -8,6 +8,11 @@ projects that use it.
 
 ## Not yet tagged
 
+- 2026-11-04. GUIDE section 13 rewritten: a project starts with
+  `copier copy`, renv init and `quarto add`; "template first" (13.2) says
+  how a general change is made, tagged and then taken up in each project
+  with `copier update` and `quarto update`, and what stays a project
+  matter.
 - 2026-11-04. The tool-facing files are a copier template: `template/`
   holds what `copier copy gh:soffiafdz/r-analysis-template <project>`
   generates (settings, the shared helpers, the README outline, the config,

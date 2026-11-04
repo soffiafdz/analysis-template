@@ -5,13 +5,12 @@ the data can rebuild the software environment, run the pipeline from raw
 data to report, and trace every reported number back to the code that
 produced it.
 
-The template is a parts bin, not a skeleton to copy whole. A project starts
-with a few core files, and each further part is copied in the first time
-the project's code needs it. The shared parts (helper modules, settings,
-the Quarto configuration and the slide theme) stay the template's: projects
-take them as they are, keep their own code in their own files, and send a
-needed change to the template first. The README and the config are seeded
-once and then belong to the project.
+A project is generated from a tagged state of the template and updated
+from later tags. The shared parts (helper modules, settings, the Quarto
+project files and the slide theme) stay the template's: projects take them
+as they are, keep their own code in their own files, and send a needed
+change to the template first. The README and the config are generated once
+and then belong to the project.
 
 ## Documents
 

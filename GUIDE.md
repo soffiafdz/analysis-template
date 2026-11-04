@@ -782,37 +782,43 @@ only to change the template; the `.pptx` is committed with the extension.
 
 ---
 
-## 13. Starting a new project
+## 13. Starting a project, and keeping it on the template
 
-Repositories grow with the work. The template is a parts bin, not a skeleton
-to copy whole: a file or folder enters a repository the first time code needs
-it. A first commit with empty folders, unused helpers and placeholder text
-looks generated, and is harder to review.
+Two tools deliver the template's files, each from a tag `vYYYY.MM`
+(`CHANGELOG.md` says what each tag changed):
 
-Files taken from the template are of two kinds. Shared files (the helper
-modules of section 5, the lint and renv settings, the Quarto configuration
-and the slide theme) stay the template's: the project does not edit them,
-and a change that is needed is made in the template first, then taken up
-in the project (`diff -u <template_dir>/<file> <file>`, until section 13
-gives a better way). Files the template only seeds (`README.md`,
-`config/pipeline_config.yaml`, `DESCRIPTION`, `environment.yml`) are the
-project's from the first edit. The template is tagged `vYYYY.MM`, and
-`CHANGELOG.md` says what each tag changed; a project records the tag it
-took. Where the project departs from the conventions, its README says so
-under "Project notes".
+- **copier** generates the tool-facing files from `template/`: the
+  settings (`.gitignore`, `.lintr`, `.here`, `.Rprofile`), `environment.yml`,
+  `DESCRIPTION`, the README outline, the config, the shared helpers in
+  `R/utils/` and the Quarto project files in `reports-src/`. It asks for
+  the environment name and the DESCRIPTION package name, records the tag in
+  `.copier-answers.yml`, and later merges a newer tag's changes three-way.
+  `README.md` and `config/pipeline_config.yaml` are generated once and then
+  belong to the project; everything else it generates is the template's
+  (section 5).
+- **`quarto add`** installs the Quarto extension (section 8) into
+  `reports-src/_extensions/`, and `quarto update` moves it to a newer tag.
 
-1. Create the project with the core files only:
+The project's own files grow with the work: scripts, project modules,
+config sections, documents. A first commit with placeholder text or empty
+folders looks generated and is harder to review, so the generated README
+is written for real before it is committed, and folders under `data/`,
+`models/`, `outputs/` and `logs/` are left to the helpers, which create
+them on first write.
+
+### 13.1 Starting a project
+
+1. Generate the files (copier is installed once, `pipx install copier`):
 
    ```sh
-   T=<template_dir>; P=<project_dir>
-   mkdir -p $P/docs && cd $P
-   cp $T/.gitignore $T/.lintr $T/.here $T/.Rprofile $T/environment.yml \
-      $T/DESCRIPTION .
-   cp $T/README.project.md README.md
-   cp $T/docs/CONVENTIONS.md docs/
-   sed -i '' -e 's/ENV_NAME/<env-name>/' environment.yml   # GNU sed: -i
-   sed -i '' -e 's/PROJECT_NAME/<name>/' DESCRIPTION          # letters, digits, dots
+   copier copy gh:soffiafdz/r-analysis-template <project_dir>
+   cd <project_dir>
    ```
+
+   Without `-r <tag>` copier takes the latest tag. It asks for the
+   environment name (lowercase, digits, underscores) and the package name
+   (letters, digits, dots), and writes `.copier-answers.yml`, which is
+   committed.
 
 2. Create the environment and initialise renv:
 
@@ -824,32 +830,33 @@ under "Project notes".
    Rscript -e 'renv::install(); renv::snapshot(prompt = FALSE)'
    ```
 
-   `renv::init()` adds `source("renv/activate.R")` to `.Rprofile`. renv is
-   installed from CRAN rather than conda-forge because conda-forge builds of
-   R packages can lag behind new R releases, and installing one can silently
+   `renv::init()` adds `source("renv/activate.R")` to `.Rprofile`; that
+   line is the project's, and `copier update` keeps it. renv is installed
+   from CRAN rather than conda-forge because conda-forge builds of R
+   packages can lag behind new R releases, and installing one can silently
    downgrade R.
 
 3. Write the README for real: overview, data access, setup. Replace every
    placeholder or delete the section; nothing in angle brackets gets
-   committed. `git init`; first commit.
+   committed. The generated README already links the conventions and the
+   style guide at the tag. `git init`; first commit.
 
 4. As the work needs them:
-   - First script: `R/scripts/01_...R` from the template in section 7, plus
-     `R/utils/logging.R`, `config.R`, `data_io.R` (and `validation.R` when
-     inputs are checked). Copy `config/pipeline_config.yaml` and fill only
-     the sections in use.
-   - First table or figure: `R/utils/tables.R` or `plotting.R`, with the
-     project's own functions in `report_tables.R` or `figures.R` and its
-     colours under `output.colors` in the config.
-   - First report: `reports-src/_quarto.yml`, `reports-src/.Rprofile`,
-     `reports-src/.gitignore`, the journal's CSL file and `references.bib`,
-     and the Quarto extension (`quarto add` from `reports-src/`, section
-     8), which also carries the slide theme and the PowerPoint template.
-   - First slides: `reports-src/screenshot_slides.sh`.
-   - `docs/STYLE.md` with `CONVENTIONS.md` once there is anything to look
-     at.
-   - Folders under `data/`, `models/`, `outputs/` and `logs/` are created by
-     the helpers on first write; they need no `.gitkeep`.
+   - First script: `R/scripts/01_...R` from the template in section 7;
+     fill only the config sections in use.
+   - First table or figure: the project's functions in `report_tables.R`
+     or `figures.R`, its colours under `output.colors` in the config.
+   - First report: the journal's CSL file and `references.bib`, and the
+     extension, at the tag in `.copier-answers.yml`:
+
+     ```sh
+     cd reports-src
+     quarto add soffiafdz/r-analysis-template/extension@<tag>
+     ```
+
+     The `_extensions/` folder it creates is committed. The document
+     declares `format: analysis-pdf`; a deck, `format: analysis-revealjs`
+     (section 8).
    - Packages arrive with the code that calls them (implicit snapshot).
      `DESCRIPTION` only lists packages no code calls, such as `lintr`.
 
@@ -857,3 +864,39 @@ under "Project notes".
 
 Anything the project does differently from this guide goes in the README
 under "Project notes", with the reason.
+
+### 13.2 Template first
+
+A general decision, whether a rule, a helper fix or a change to the theme,
+is made in the template, tagged, and then taken up in the projects. It is
+never made only in a project's copy: a shared file edited in a project
+drifts from every other copy, and the next update has to merge through the
+edit. In the template:
+
+1. Make the change; add a dated line to `CHANGELOG.md`; commit.
+2. Tag: `git tag -a vYYYY.MM -m '<one line>'`, the year and month of the
+   change; a second tag in the same month takes a counter, `vYYYY.MM.1`.
+   Tags are never moved.
+3. Regenerate and render `example/` from the tag (`copier copy -r <tag>`
+   onto it, the extension copied into its `reports-src/_extensions/`, the
+   documents rendered), so the example tests the template. Commit it.
+
+Then, in each active project, from a clean git tree:
+
+```sh
+copier update -r vYYYY.MM
+cd reports-src && quarto update soffiafdz/r-analysis-template/extension@vYYYY.MM
+```
+
+copier merges the tag's changes three-way with the project's files and
+marks any conflict inline, as git does; resolve, re-render the documents
+the change affects, check the slides (section 8), and commit as one
+change, "Update to template vYYYY.MM". `.copier-answers.yml` then names
+the new tag and the extension's `_extension.yml` its version, which is how
+a reader tells what state a project is on.
+
+What stays a project matter, and never goes into a shared file: a
+departure from the conventions, written under "Project notes"; a deck's
+own stylesheet or include beside the deck (section 8); project functions in
+project modules (section 5). A change a project needs in a shared file is
+either general, and goes to the template first, or it is one of these.
