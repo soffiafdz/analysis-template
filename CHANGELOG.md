@@ -8,6 +8,14 @@ projects that use it.
 
 ## Not yet tagged
 
+- 2026-11-05. Reports are set in EB Garamond with TeX Gyre Heros, a free
+  Helvetica, for headings and figures, in place of Libertinus, at 11.5 pt
+  (`analysis-pdf`). Both ship with TeX Live (`tlmgr install ebgaramond
+  tex-gyre` on TinyTeX), and the extension carries the Heros files with
+  their GUST licence for figures. `theme_publication()` takes
+  `base_family`, set to TeX Gyre Heros, and stops if the family is not
+  available; `register_document_font()` registers it, and document
+  figures are PNG drawn by ragg. The example's report figure follows.
 - 2026-11-05. The template is renamed analysis-template, from
   r-analysis-template, because it holds more than R code: projects start
   with `copier copy gh:soffiafdz/analysis-template` and take the extension

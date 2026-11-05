@@ -15,7 +15,8 @@ data:
   models:
     body_mass: models/results/body_mass.rds
   outputs:
-    body_mass_figure: outputs/figures/body_mass.pdf
+    # PNG: ragg draws it in the documents' face, TeX Gyre Heros
+    body_mass_figure: outputs/figures/body_mass.png
     body_mass_slide: outputs/figures/body_mass_slide.png
     sample_slide: outputs/figures/sample_slide.png
     differences_slide: outputs/figures/differences_slide.png

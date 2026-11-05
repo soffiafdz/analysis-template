@@ -76,10 +76,18 @@ values that do not pass). Two greys close to each other read as one.
 
 | Output | Font | Sizes |
 |---|---|---|
-| PDF (xelatex) | Libertinus Serif, Libertinus Sans headings | 10 pt body; tables via `style_pdf_table.fn()` |
+| PDF (xelatex) | EB Garamond text, TeX Gyre Heros (a free Helvetica) headings; both in TeX Live, with Greek | 11.5 pt body; tables via `style_pdf_table.fn()` |
 | HTML slides | IBM Plex Sans, embedded from the extension's `fonts/` (SIL Open Font License), then Helvetica Neue, Arial | in slide pixels: running line 24, caption and table headers 30, body and tables 34, headline 48; title slide: title 80, subtitle 44, name 36, event 32; weights 400 and 600 |
 | PowerPoint | Arial | titles 26 pt bold, body 18 pt, notes 14 pt |
-| Figures | ggplot2 default sans; slide versions in IBM Plex Sans (`register_slide_font()`, drawn by ragg) | `theme_publication()` base size 10 to 12; slide versions at 30 px (`slide_text_px`), tick labels included |
+| Figures | Document versions in TeX Gyre Heros (`register_document_font()`), slide versions in IBM Plex Sans (`register_slide_font()`), both PNG drawn by ragg | `theme_publication()` base size 10 to 12; slide versions at 30 px (`slide_text_px`), tick labels included |
+
+The report faces were chosen from rendered specimens (November 2026).
+Libertinus and the open faces drawn for screens (IBM Plex Serif, Source
+Serif, Literata, Piazzolla) read as engineered rather than designed; STIX
+Two read as cheap and lacks ≥ and ≤. Faces that ship only with macOS
+(Baskerville, Helvetica Neue) are out: they cannot be shared and a render
+elsewhere stops or changes face. A report face must be free, in TeX Live
+or shipped in the extension, and have Greek.
 
 The slide scale is narrow on purpose: nothing a reader needs is below 30
 px, and the headline is only 1.4 times the body. Raising every size

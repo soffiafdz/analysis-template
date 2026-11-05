@@ -58,8 +58,9 @@ HTML slides as source, so download `slides.html` to view them.
 - micromamba, mamba or conda, to create the environment in
   `environment.yml` (R 4.6, Quarto 1.9, compilers and system libraries).
   R packages are installed with renv.
-- TeX Live with xelatex for PDF reports; the Libertinus fonts ship with it.
-  A minimal install such as TinyTeX needs `tlmgr install libertinus-fonts`.
+- TeX Live with xelatex for PDF reports; the EB Garamond and TeX Gyre
+  fonts ship with it. A minimal install such as TinyTeX needs
+  `tlmgr install ebgaramond tex-gyre`.
 - Firefox, to screenshot slides for checking.
 - Python with python-pptx, only to rebuild the PowerPoint template.
 - PowerPoint, to check the PowerPoint slides; LibreOffice may lay them out
@@ -74,5 +75,6 @@ and GNU sed takes `-i` alone.
 [CC BY 4.0](LICENSE-docs). Everything else, including the files copied into
 projects, is under the [MIT licence](LICENSE), except the logos in
 `extension/_extensions/analysis/logos/`, which are trademarks of their
-institutions (`SOURCES.md` there) and the IBM Plex Sans fonts beside them,
-under the SIL Open Font License (`fonts/OFL.txt`).
+institutions (`SOURCES.md` there), the IBM Plex Sans fonts beside them,
+under the SIL Open Font License (`fonts/OFL.txt`), and the TeX Gyre Heros
+fonts, under the GUST Font License (`fonts/GUST-FONT-LICENSE.txt`).

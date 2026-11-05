@@ -33,22 +33,25 @@ contributes:
       toc-depth: 2
       number-sections: true
       geometry: margin=2.2cm
-      fontsize: 10pt
-      # Libertinus ships with TeX Live, so it works on Linux and HPC, and it
-      # has Greek (APOE ε4, η²); LaTeX's default font prints a blank instead
-      mainfont: LibertinusSerif
+      # EB Garamond for the text, TeX Gyre Heros (a free Helvetica) for
+      # headings and figures, chosen from rendered specimens (docs/STYLE.md).
+      # Both are free, ship with TeX Live and have the Greek reports need
+      # (APOE ε4, η²), so a report renders the same on any machine
+      fontsize: 11.5pt
+      mainfont: EBGaramond
       mainfontoptions:
         - Extension=.otf
         - UprightFont=*-Regular
-        - BoldFont=*-Bold
         - ItalicFont=*-Italic
-        - BoldItalicFont=*-BoldItalic
-      sansfont: LibertinusSans
+        - BoldFont=*-SemiBold
+        - BoldItalicFont=*-SemiBoldItalic
+      sansfont: texgyreheros
       sansfontoptions:
         - Extension=.otf
-        - UprightFont=*-Regular
-        - BoldFont=*-Bold
-        - ItalicFont=*-Italic
+        - UprightFont=*-regular
+        - ItalicFont=*-italic
+        - BoldFont=*-bold
+        - BoldItalicFont=*-bolditalic
     # The editable copy of a deck, on the template slides-reference.pptx
     pptx:
       reference-doc: slides-reference.pptx

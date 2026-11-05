@@ -366,13 +366,19 @@ modules:
   are read from `output.colors` in the config and merged over them.
 - `get_palette(type)`: `"default"` (Okabe-Ito), `"tol_bright"` and
   `"tol_muted"` (Paul Tol, colourblind-safe), `"sex"`, `"sex_md"`.
-- `theme_publication(base_size = 10, use_markdown = FALSE)`, based on
-  `theme_classic`; `use_markdown = TRUE` renders markdown and HTML
-  (`**bold**`, `<sup>`) in titles, axes and strips via ggtext.
+- `theme_publication(base_size = 10, use_markdown = FALSE,
+  base_family = "TeX Gyre Heros")`, based on `theme_classic`;
+  `use_markdown = TRUE` renders markdown and HTML (`**bold**`, `<sup>`) in
+  titles, axes and strips via ggtext. Document figures are set in the
+  documents' heading face: `register_document_font()` registers TeX Gyre
+  Heros from the Quarto extension (section 8) first, and the theme stops
+  if the family is not available rather than substitute another.
 - `save_plot(plot, filename, width = 7, height = 7, dpi = 600)`; the
-  extension sets the format. PDFs are written with `cairo_pdf`, which
-  embeds the fonts; PNGs with `ragg::agg_png`, which draws fonts
-  registered with systemfonts.
+  extension sets the format. PNGs go through `ragg::agg_png`, which draws
+  the fonts registered with systemfonts, so figures for documents and
+  slides are PNG. PDFs are written with `cairo_pdf`, which embeds fonts but
+  sees only those installed on the system: it suits a journal that
+  prescribes Arial or Helvetica, set through `base_family`.
 - Slide figures: `register_slide_font()` registers the IBM Plex Sans files
   of the Quarto extension (section 8), which the deck embeds;
   `theme_slide(base_size)`
@@ -527,11 +533,13 @@ log_script_end("NN_verb_object.R", success = TRUE)
 - **Render to PDF:** the document declares `format: analysis-pdf`, then
   `cd reports-src && quarto render <file>.qmd` (xelatex). Word copies for
   journals are converted from the rendered output. The format sets the PDF
-  defaults: Libertinus fonts (shipped with TeX Live, with Greek letters), a
-  table of contents and numbered sections. A minimal TeX install such as
-  TinyTeX needs `tlmgr install libertinus-fonts`; a machine that lacks the
-  fonts gets them installed, and the format is not edited to use another
-  face.
+  defaults: EB Garamond for the text and TeX Gyre Heros, a free Helvetica,
+  for headings, both shipped with TeX Live and with Greek letters; a table
+  of contents and numbered sections. A minimal TeX install such as TinyTeX
+  needs `tlmgr install ebgaramond tex-gyre`; a machine that lacks the fonts
+  gets them installed, and the format is not edited to use another face.
+  Faces that come only with macOS (Baskerville, Helvetica Neue) are not
+  used: a render elsewhere would stop or silently change face.
 - **Tables in the PDF:** pass gt tables through `style_pdf_table.fn()`. If
   one still overflows, shorten its row labels in the document (and say so in
   the source note) rather than shrinking the text further.
@@ -565,7 +573,7 @@ nothing else:
 | Format | Carries |
 |---|---|
 | `analysis-revealjs` | the slide theme (`slides.scss`), the 1600 by 900 slide, flex layout without auto-stretch, the footer script that numbers the slides, IBM Plex Sans embedded from `fonts/`, `embed-resources` |
-| `analysis-pdf` | xelatex, the Libertinus fonts, a table of contents, numbered sections, margins and type size |
+| `analysis-pdf` | xelatex, EB Garamond text and TeX Gyre Heros headings at 11.5 pt, a table of contents, numbered sections, margins |
 | `analysis-pptx` | the PowerPoint template `slides-reference.pptx` |
 
 A document can still add its own `css`, `theme` or `include-after-body`
@@ -765,8 +773,9 @@ only to change the template; the `.pptx` is committed with the extension.
 | A mixture-model grid fitted with 100 starts missed better solutions for some models | Re-fit with more starts; keep a solution both searches reach (10) |
 | `quarto render` could not find knitr, then `here()` pointed at `reports-src/` | `reports-src/.Rprofile` for renv; `here::i_am()` in each document (8) |
 | A sentence starting with an inline number turned into a numbered list item | Never start a line with inline R that prints a number (8) |
-| "APOE ε4" printed with a blank for ε in the PDF | Libertinus fonts in the extension's PDF format (8) |
-| Two projects swapped the PDF font for one at a macOS path because their TeX install lacked Libertinus, and dropped `ragg` and `systemfonts` from DESCRIPTION | A missing font is installed (`tlmgr`), never worked around in shared files (8, 2) |
+| "APOE ε4" printed with a blank for ε in the PDF | Faces with Greek in the extension's PDF format (8) |
+| Two projects swapped the PDF font for one at a macOS path because their TeX install lacked the template's, and dropped `ragg` and `systemfonts` from DESCRIPTION | A missing font is installed (`tlmgr`), never worked around in shared files (8, 2) |
+| Reports in Libertinus, then in open faces drawn for screens (Plex Serif, Source Serif, Literata), read as built by an engineer, not designed | EB Garamond with TeX Gyre Heros, picked from rendered specimens; free, in TeX Live, with Greek (8, docs/STYLE.md) |
 | Slides converted to PowerPoint lost their layout | A separate PowerPoint deck on its own template (8) |
 | A yellow line label was unreadable on white | 3:1 contrast for coloured text (docs/STYLE.md) |
 | A deck had values broken over two lines, "1,204 of 1,204", small left-aligned tables and a list of scripts | The faults table and a screenshot of every slide (docs/STYLE.md, 8) |

@@ -106,6 +106,7 @@ colors.v <- unlist(manuscript_colors()[tolower(P$species)])
 names(colors.v) <- P$species
 figure.path <- get_data_path("outputs", "body_mass_figure")
 slide.path <- get_data_path("outputs", "body_mass_slide")
+register_document_font()
 save_plot(
   plot_body_mass.fn(
     penguins.dt, means.dt, colors.v,

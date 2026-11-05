@@ -88,12 +88,27 @@ get_palette <- function(type = "default") {
 # ----- Plot Themes -----
 
 #' Standard ggplot theme for publications
+#'
+#' Figures for documents are set in TeX Gyre Heros, the headings' face of
+#' the template's PDF format: call register_document_font() first and save
+#' them as PNG, which ragg draws in the registered face (cairo_pdf would
+#' substitute a system font). A journal that prescribes its own face gets
+#' it through base_family.
 #' @param base_size Base font size
 #' @param use_markdown Whether to use ggtext markdown in axis titles and text,
 #'   strips and the plot title (requires the ggtext package)
+#' @param base_family Font family, registered or installed on the system
 #' @return ggplot2 theme object
-theme_publication <- function(base_size = 10, use_markdown = FALSE) {
-  base_theme <- ggplot2::theme_classic(base_size = base_size) +
+theme_publication <- function(base_size = 10, use_markdown = FALSE,
+                              base_family = "TeX Gyre Heros") {
+  known.v <- c(systemfonts::registry_fonts()$family,
+               systemfonts::system_fonts()$family)
+  if (!base_family %in% known.v) {
+    stop("Font family '", base_family, "' is not available; call ",
+         "register_document_font() first (GUIDE.md section 5)", call. = FALSE)
+  }
+  base_theme <- ggplot2::theme_classic(base_size = base_size,
+                                       base_family = base_family) +
     ggplot2::theme(
       text = ggplot2::element_text(size = base_size),
       axis.text = ggplot2::element_text(size = base_size - 1),
@@ -127,35 +142,55 @@ slide_base_size <- function(text_px, dpi) {
   text_px / (dpi / 72)
 }
 
-#' Register the slides' typeface for figures
+#' Register four font files from the template's Quarto extension
 #'
-#' The slides embed IBM Plex Sans from the fonts/ folder of the template's
-#' Quarto extension (SIL Open Font License), installed by quarto add under
-#' reports-src/_extensions/. Registering the same files lets ragg draw
-#' figure text in the slides' face, with "bold" set in the semibold, as on
-#' the slides.
+#' The extension's fonts/ folder, installed under reports-src/_extensions/,
+#' holds the faces of the slides and documents. Registering them lets ragg
+#' draw figure text in the same files the documents embed.
 #' @param family Family name to register
+#' @param files.v File names: plain, bold, italic, bold italic
 #' @return The family name, invisibly
-register_slide_font <- function(family = "IBM Plex Sans") {
-  regular.v <- list.files(here::here("reports-src", "_extensions"),
-                          pattern = "^IBMPlexSans-Regular\\.ttf$",
-                          recursive = TRUE, full.names = TRUE)
-  if (length(regular.v) != 1) {
-    stop("IBM Plex Sans found ", length(regular.v), " times under ",
+.register_extension_font <- function(family, files.v) {
+  found.v <- list.files(here::here("reports-src", "_extensions"),
+                        pattern = paste0("^", files.v[1], "$"),
+                        recursive = TRUE, full.names = TRUE)
+  if (length(found.v) != 1) {
+    stop(files.v[1], " found ", length(found.v), " times under ",
          "reports-src/_extensions/; install the template's Quarto ",
          "extension once (GUIDE.md section 8)", call. = FALSE)
   }
-  font_dir <- dirname(regular.v)
-  files.v <- file.path(font_dir, paste0(
+  paths.v <- file.path(dirname(found.v), files.v)
+  if (!all(file.exists(paths.v))) {
+    stop(family, " incomplete in ", dirname(found.v), call. = FALSE)
+  }
+  systemfonts::register_font(family, plain = paths.v[1], bold = paths.v[2],
+                             italic = paths.v[3], bolditalic = paths.v[4])
+  invisible(family)
+}
+
+#' Register the slides' typeface for figures
+#'
+#' IBM Plex Sans (SIL Open Font License), with "bold" set in the semibold,
+#' as on the slides.
+#' @param family Family name to register
+#' @return The family name, invisibly
+register_slide_font <- function(family = "IBM Plex Sans") {
+  .register_extension_font(family, paste0(
     "IBMPlexSans-", c("Regular", "SemiBold", "Italic", "SemiBoldItalic"),
     ".ttf"
   ))
-  if (!all(file.exists(files.v))) {
-    stop("IBM Plex Sans not found in ", font_dir, call. = FALSE)
-  }
-  systemfonts::register_font(family, plain = files.v[1], bold = files.v[2],
-                             italic = files.v[3], bolditalic = files.v[4])
-  invisible(family)
+}
+
+#' Register the documents' figure typeface
+#'
+#' TeX Gyre Heros (GUST Font License), the headings' face of the PDF
+#' format, for figures drawn by theme_publication().
+#' @param family Family name to register
+#' @return The family name, invisibly
+register_document_font <- function(family = "TeX Gyre Heros") {
+  .register_extension_font(family, paste0(
+    "texgyreheros-", c("regular", "bold", "italic", "bolditalic"), ".otf"
+  ))
 }
 
 #' Theme for slide figures: recessive axes and grid, text in the slide inks
@@ -204,8 +239,9 @@ save_plot <- function(plot, filename, width = 7, height = 7, dpi = 600) {
   ensure_directory(dirname(filename))
 
   # ggsave's default pdf device leaves fonts unembedded, which journals
-  # reject; cairo_pdf embeds them. PNGs go through ragg, which draws the
-  # fonts registered with systemfonts
+  # reject; cairo_pdf embeds them, but only fonts installed on the system.
+  # PNGs go through ragg, which draws the fonts registered with systemfonts,
+  # so figures for the documents and slides are PNG
   extension <- tolower(tools::file_ext(filename))
   device <- if (extension == "pdf") {
     grDevices::cairo_pdf

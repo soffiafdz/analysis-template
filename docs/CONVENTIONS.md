@@ -136,9 +136,10 @@ The last pipeline script gathers every number the text needs into
 analysis of its own; numbers in the text come from inline R. After a change
 upstream, that script is re-run before rendering. Documents render to PDF
 with xelatex in the template's formats (`format: analysis-pdf`), set in
-the Libertinus fonts; a TeX install that lacks them gets
-`tlmgr install libertinus-fonts`, and the format is not changed. `ragg`
-and `systemfonts` stay in `DESCRIPTION`: the slide figures need them.
+EB Garamond with TeX Gyre Heros headings; a TeX install that lacks them
+gets `tlmgr install ebgaramond tex-gyre`, and the format is not changed.
+Figures are drawn by ragg as PNG in the same faces as the documents and
+slides, so `ragg` and `systemfonts` stay in `DESCRIPTION`.
 
 Captions start with a short bold title ending in a full stop, followed by
 the details. Captions that contain numbers are built with
