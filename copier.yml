@@ -9,9 +9,8 @@ _skip_if_exists:
   - README.md
   - config/pipeline_config.yaml
 _message_after_copy: |
-  Next (GUIDE.md section 13): create the environment, initialise renv, and
-  install the Quarto extension from reports-src/:
-    quarto add soffiafdz/analysis-template/extension@{{ _copier_answers._commit }}
+  Generated at {{ _copier_answers._commit }}. Next (GUIDE.md section 13.1):
+  create the environment, initialise renv, and write the README.
 
 template_url:
   type: str

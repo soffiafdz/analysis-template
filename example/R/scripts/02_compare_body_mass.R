@@ -108,18 +108,9 @@ figure.path <- get_data_path("outputs", "body_mass_figure")
 slide.path <- get_data_path("outputs", "body_mass_slide")
 register_document_font()
 save_plot(
-  plot_body_mass.fn(
-    penguins.dt, means.dt, colors.v,
-    title = "**Body mass by species and sex.**",
-    subtitle = sprintf("%d penguins with complete records", nrow(penguins.dt)),
-    caption = sprintf(
-      paste("Points: individual penguins. Black: means with %.0f%%",
-            "confidence intervals."),
-      100 * P$ci_level
-    ),
-    base_size = 10
-  ),
-  figure.path, width = OUT$figure_size[1], height = OUT$figure_size[2]
+  plot_body_mass.fn(penguins.dt, means.dt, colors.v, base_size = 9),
+  figure.path, width = OUT$document_figure[1],
+  height = OUT$document_figure[2]
 )
 register_slide_font()
 slide_base <- slide_base_size(OUT$slide_text_px, OUT$slide_dpi)
@@ -130,11 +121,8 @@ save_slide.fn <- function(plot, path, area) {
             dpi = OUT$slide_dpi)
 }
 save_slide.fn(
-  plot_body_mass.fn(
-    penguins.dt, means.dt, colors.v,
-    title = NULL, subtitle = NULL, caption = NULL,
-    base_size = slide_base, slide = TRUE
-  ),
+  plot_body_mass.fn(penguins.dt, means.dt, colors.v,
+                    base_size = slide_base, slide = TRUE),
   slide.path, "full"
 )
 sample.path <- get_data_path("outputs", "sample_slide")

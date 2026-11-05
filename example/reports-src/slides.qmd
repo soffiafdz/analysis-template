@@ -62,9 +62,9 @@ stopifnot(
 :::
 
 ::: {.logos}
-![](_extensions/soffiafdz/analysis/logos/mcgill.svg){.mcgill fig-alt="McGill University"}
-![](_extensions/soffiafdz/analysis/logos/douglas.png){.douglas .mono fig-alt="Douglas Research Centre"}
-![](_extensions/soffiafdz/analysis/logos/stopad.png){.stopad .mono fig-alt="StoP-AD Centre"}
+![](_extensions/analysis/logos/mcgill.svg){.mcgill fig-alt="McGill University"}
+![](_extensions/analysis/logos/douglas.png){.douglas .mono fig-alt="Douglas Research Centre"}
+![](_extensions/analysis/logos/stopad.png){.stopad .mono fig-alt="StoP-AD Centre"}
 :::
 
 ## How much heavier are males, and does it depend on the species? {data-part="Question and data"}

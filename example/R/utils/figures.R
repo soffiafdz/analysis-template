@@ -9,39 +9,34 @@ source(here::here("R/utils/plotting.R"))
 
 #' Body mass by species, one panel per sex
 #'
+#' No title or caption in the image: the document's caption or the slide's
+#' heading carries them.
 #' @param penguins.dt Penguins with columns species, sex and body_mass
 #' @param means.dt Means with CIs: species, sex, mean, lower, upper
 #' @param colors.v Colours named by species
-#' @param title,subtitle,caption Figure text; the title may use markdown
 #' @param base_size Base font size
-#' @param slide TRUE for the slide version, in theme_slide()
+#' @param slide TRUE for the slide version, in theme_slide(); FALSE for
+#'   documents, in theme_document()
 #' @return ggplot object
-plot_body_mass.fn <- function(penguins.dt, means.dt, colors.v, title,
-                              subtitle, caption, base_size, slide = FALSE) {
-  plot <- ggplot2::ggplot(mapping = ggplot2::aes(species, colour = species)) +
+plot_body_mass.fn <- function(penguins.dt, means.dt, colors.v, base_size,
+                              slide = FALSE) {
+  theme.fn <- if (slide) theme_slide else theme_document
+  ggplot2::ggplot(mapping = ggplot2::aes(species, colour = species)) +
     ggplot2::geom_jitter(
       data = penguins.dt, ggplot2::aes(y = body_mass),
-      width = 0.2, height = 0, alpha = 0.35,
-      size = if (slide) 1.6 else base_size / 10
+      width = 0.2, height = 0, alpha = 0.35, size = 1.6
     ) +
     ggplot2::geom_pointrange(
       data = means.dt,
       ggplot2::aes(y = mean, ymin = lower, ymax = upper),
-      colour = "black", size = if (slide) 0.6 else base_size / 25,
-      linewidth = if (slide) 0.9 else base_size / 15
+      colour = "black", size = 0.6, linewidth = 0.9
     ) +
     ggplot2::facet_wrap(~sex, nrow = 1) +
     ggplot2::scale_colour_manual(values = colors.v, guide = "none") +
-    ggplot2::labs(
-      x = NULL, y = "Body mass (g)",
-      title = title, subtitle = subtitle, caption = wrap_text(caption, 100)
-    )
-  if (slide) {
-    return(plot + theme_slide(base_size) +
-             ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
-                            panel.spacing = ggplot2::unit(2, "lines")))
-  }
-  plot + theme_publication(base_size = base_size, use_markdown = TRUE)
+    ggplot2::labs(x = NULL, y = "Body mass (g)") +
+    theme.fn(base_size) +
+    ggplot2::theme(panel.grid.major.x = ggplot2::element_blank(),
+                   panel.spacing = ggplot2::unit(2, "lines"))
 }
 
 #' Slide figure: penguins analysed per species, one panel per sex, with

@@ -4,8 +4,9 @@ version: 2026.11.0
 quarto-required: ">=1.9.0"
 # The formats of the analysis project template (GUIDE.md section 8,
 # docs/STYLE.md). A document declares one of them and nothing else:
-# analysis-revealjs, analysis-pdf or analysis-pptx. Installed from the
-# template's extension/ with quarto add; updated with quarto update.
+# analysis-revealjs, analysis-pdf or analysis-pptx. Generated into
+# reports-src/_extensions/analysis/ by copier and updated by copier update;
+# a change is made in the template, never here (GUIDE.md section 13).
 contributes:
   formats:
     # The designed deck: self-contained HTML in the slide theme
@@ -32,14 +33,25 @@ contributes:
       toc: true
       toc-depth: 2
       number-sections: true
-      geometry: margin=2.2cm
+      # A 13.2 cm text block, about 70 characters a line, centred on the
+      # page; the title, headings, captions and line spacing are set by
+      # document.tex
+      geometry:
+        - textwidth=13.2cm
+        - hmarginratio=1:1
+        - top=2.2cm
+        - bottom=2.4cm
+      include-in-header: document.tex
       # EB Garamond for the text, TeX Gyre Heros (a free Helvetica) for
       # headings and figures, chosen from rendered specimens (docs/STYLE.md).
       # Both are free, ship with TeX Live and have the Greek reports need
       # (APOE ε4, η²), so a report renders the same on any machine
-      fontsize: 11.5pt
+      # EB Garamond is small on its body, so it is set 10% above the 11 pt
+      # class size (about 12 pt), with the line spacing in document.tex
+      fontsize: 11pt
       mainfont: EBGaramond
       mainfontoptions:
+        - Scale=1.1
         - Extension=.otf
         - UprightFont=*-Regular
         - ItalicFont=*-Italic

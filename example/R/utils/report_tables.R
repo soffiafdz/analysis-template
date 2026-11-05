@@ -19,9 +19,10 @@ source(here::here("R/utils/tables.R"))
 create_body_mass_table.fn <- function(table.dt, sex_labels.v, ci_level,
                                       title) {
   ci_label <- sprintf("Mean (%.0f%% CI)", 100 * ci_level)
+  # The difference is male minus female; the caption says so, which keeps
+  # the column narrow enough for the text block
   labels.lst <- list(species = "Species", difference = sprintf(
-    "%s minus %s (%.0f%% CI)", sex_labels.v[2], tolower(sex_labels.v[1]),
-    100 * ci_level
+    "Difference (%.0f%% CI)", 100 * ci_level
   ))
   for (sex in sex_labels.v) {
     labels.lst[[paste0("n_", sex)]] <- "n"

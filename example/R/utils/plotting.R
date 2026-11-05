@@ -227,6 +227,24 @@ theme_slide <- function(base_size, base_family = "IBM Plex Sans") {
     )
 }
 
+#' Theme for figures in documents
+#'
+#' The slide figure style (recessive grid, no boxes, labels in the inks) in
+#' the documents' sans, TeX Gyre Heros. A document figure carries no title,
+#' subtitle or caption: the document's caption gives them. It is drawn at
+#' the text width of the PDF format (output.document_figure in the config)
+#' and saved as PNG, so it is shown at its drawn size.
+#' @param base_size Base font size in points
+#' @return ggplot2 theme object
+theme_document <- function(base_size = 9) {
+  family <- "TeX Gyre Heros"
+  if (!family %in% systemfonts::registry_fonts()$family) {
+    stop("Call register_document_font() before theme_document() ",
+         "(GUIDE.md section 5)", call. = FALSE)
+  }
+  theme_slide(base_size, base_family = family)
+}
+
 # ----- Plot Helpers -----
 
 #' Save plot with standard settings

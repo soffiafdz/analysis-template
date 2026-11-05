@@ -31,6 +31,9 @@ parameters: {}
 output:
   figure_format: [pdf, png]
   dpi: 600
+  # Figures in documents: drawn at the text width of the PDF format
+  # (13.2 cm, 5.2 in) by theme_document(), as PNG at dpi; width, height
+  document_figure: [5.2, 2.6]
   # Project colours, merged over the shared entries of manuscript_colors():
   # one per group, predictor or measure, from the Tol palettes in
   # get_palette(), with a comment saying why each was chosen (docs/STYLE.md)

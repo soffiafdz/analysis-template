@@ -76,10 +76,10 @@ values that do not pass). Two greys close to each other read as one.
 
 | Output | Font | Sizes |
 |---|---|---|
-| PDF (xelatex) | EB Garamond text, TeX Gyre Heros (a free Helvetica) headings; both in TeX Live, with Greek | 11.5 pt body; tables via `style_pdf_table.fn()` |
+| PDF (xelatex) | EB Garamond text, TeX Gyre Heros (a free Helvetica) headings; both in TeX Live, with Greek | body about 12 pt (11 pt class size, Garamond scaled by 1.1), line spacing 1.08; tables via `style_pdf_table.fn()` |
 | HTML slides | IBM Plex Sans, embedded from the extension's `fonts/` (SIL Open Font License), then Helvetica Neue, Arial | in slide pixels: running line 24, caption and table headers 30, body and tables 34, headline 48; title slide: title 80, subtitle 44, name 36, event 32; weights 400 and 600 |
 | PowerPoint | Arial | titles 26 pt bold, body 18 pt, notes 14 pt |
-| Figures | Document versions in TeX Gyre Heros (`register_document_font()`), slide versions in IBM Plex Sans (`register_slide_font()`), both PNG drawn by ragg | `theme_publication()` base size 10 to 12; slide versions at 30 px (`slide_text_px`), tick labels included |
+| Figures | Document versions in TeX Gyre Heros (`register_document_font()`), slide versions in IBM Plex Sans (`register_slide_font()`), both PNG drawn by ragg | `theme_document()` base size 9; `theme_publication()` base size 10 to 12 for journal files; slide versions at 30 px (`slide_text_px`), tick labels included |
 
 The report faces were chosen from rendered specimens (November 2026).
 Libertinus and the open faces drawn for screens (IBM Plex Serif, Source
@@ -111,9 +111,15 @@ purpose.
 
 ## Figures
 
-- `theme_publication()` with `use_markdown = TRUE`. Manuscript figures carry
-  a bold title ending in a full stop, a subtitle with the sample, and a
-  caption with the details, wrapped with `wrap_text()`.
+- Document versions use `theme_document()`: the slide style in TeX Gyre
+  Heros, drawn at the text width (`output.document_figure`) as PNG, with
+  no title, subtitle or caption in the image; the document's caption
+  carries them.
+- Figures sent to a journal as files of their own use
+  `theme_publication()` in the journal's face (`base_family`), with
+  `use_markdown = TRUE`, and carry a bold title ending in a full stop, a
+  subtitle with the sample, and a caption with the details, wrapped with
+  `wrap_text()`.
 - Lines are labelled directly where possible instead of in a legend.
 - Slide versions use `theme_slide()`: no title, subtitle or caption,
   recessive grid, text in the slide inks, a legend (if any) at the
@@ -141,6 +147,21 @@ purpose.
   then the details.
 - No em-dashes; no stock openers ("Of note", "It is worth noting").
 - Numbers in text, captions and slides come from the environment file.
+
+## Documents
+
+The PDF format (`analysis-pdf`, with `document.tex`) sets the page:
+
+- A 13.2 cm text block, about 70 characters a line, centred on the page.
+- The title flush left in TeX Gyre Heros, 20 pt bold, broken by hand at a
+  phrase boundary (a backslash at the end of the line in the YAML
+  `title: |` block); the subtitle under it at 11.5 pt in grey; the author
+  and date at 9 pt in the muted grey.
+- Headings in Heros bold, numbered; text in EB Garamond at about 12 pt.
+- Captions flush left in small type with the label in bold ("Figure 1."),
+  no hanging indent: under figures, above tables.
+- Figures and tables span the text width, so every block shares one left
+  edge.
 
 ## Slides
 

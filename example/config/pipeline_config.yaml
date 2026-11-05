@@ -35,7 +35,9 @@ parameters:
   ci_level: 0.95
 
 output:
-  figure_size: [7, 4]
+  # Figures in documents: drawn at the text width of the PDF format
+  # (13.2 cm, 5.2 in) by theme_document(), as PNG at dpi; width, height
+  document_figure: [5.2, 2.6]
   # Species, from tol_bright; red is left out because it is too close to
   # the McGill red of the slides (docs/STYLE.md)
   colors:

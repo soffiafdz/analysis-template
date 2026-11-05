@@ -1,9 +1,11 @@
 /.quarto/
 *.html
-# Source, not output: the slide footer script of the template's extension
+# Source, not output: the extension's slide footer script and page settings
 !_extensions/**/slides-footer.html
-# The fonts' licence travels with them, should *.txt be ignored as data
+!_extensions/**/document.tex
+# The fonts' licences travel with them, should *.txt be ignored as data
 !_extensions/**/OFL.txt
+!_extensions/**/GUST-FONT-LICENSE.txt
 *_files/
 
 **/*.quarto_ipynb

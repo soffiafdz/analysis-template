@@ -8,8 +8,9 @@ its layouts: Title Slide, Title and Content (lists and tables on their own)
 and Content with Caption (a table or figure with a short note, which goes
 under it in small grey text).
 
-Run from reports-src/ after changing it:
-    python build_slides_reference.py   (from extension/)
+Run from the template's root after changing it:
+    python tools/build_slides_reference.py
+It writes into the Quarto extension that copier generates into projects.
 Needs Quarto (for pandoc's default template) and python-pptx.
 """
 import io
@@ -23,12 +24,13 @@ from pptx.oxml.ns import qn
 from pptx.oxml.shapes.picture import CT_Picture
 from pptx.util import Emu
 
-OUTPUT = "_extensions/analysis/slides-reference.pptx"
+EXT = "template/reports-src/_extensions/analysis"
+OUTPUT = f"{EXT}/slides-reference.pptx"
 INK, SOFT, MUTED = "1A1A1A", "4A4A4A", "5C5C5C"
 RED, TEAL = "ED1B2F", "1A6C7A"  # McGill red, StoP-AD teal (docs/STYLE.md)
 # PNG, as PowerPoint shows SVG only from 2016 on; mcgill.png is the reversed
 # wordmark on its red box
-LOGOS = [f"_extensions/analysis/logos/{f}.png" for f in ("mcgill", "douglas", "stopad")]
+LOGOS = [f"{EXT}/logos/{f}.png" for f in ("mcgill", "douglas", "stopad")]
 A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"
 
 # Geometry in EMU on pandoc's 16:9 slide (10 x 5.625 in)

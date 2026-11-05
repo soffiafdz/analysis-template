@@ -1,5 +1,7 @@
 ---
-title: "Body mass of Palmer penguins by species and sex"
+title: |
+  Body mass of Palmer penguins\
+  by species and sex
 subtitle: "A worked example of the analysis project template"
 date: today
 bibliography: references.bib
@@ -93,7 +95,7 @@ knitr::include_graphics(figure)
 ```{r}
 #| label: tbl-body-mass
 #| tbl-pos: H
-#| tbl-cap: "**Body mass by species and sex.** Penguins with every measurement and a recorded sex."
+#| tbl-cap: "**Body mass by species and sex.** Penguins with every measurement and a recorded sex; the difference is male minus female."
 create_body_mass_table.fn(
   body_mass_table, sex_labels.v = get_parameter("sex_labels"),
   ci_level = ci_level, title = NULL

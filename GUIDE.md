@@ -388,12 +388,16 @@ modules:
   size that matches the slides' text.
 - `wrap_text()` (returns `NULL` for `NULL`), and `plot_comparison()` for
   estimates with CIs by group.
+- Document figures: `theme_document(base_size = 9)` is the slide style
+  in TeX Gyre Heros, after `register_document_font()`. The figure carries
+  no title, subtitle or caption, which the document's caption gives, and
+  is saved as PNG at the text width of the PDF format
+  (`output.document_figure`), so it is shown at its drawn size.
 - Project figures: one `plot_<thing>()` per figure, in `figures.R`, which
-  sources `plotting.R`. Its `title`, `subtitle` and `caption`
-  arguments accept `NULL`, and it takes `base_size`, so the same function
-  draws the slide version: the script builds the plot a second time with
-  no title, subtitle or caption, in `theme_slide()`, and saves it as PNG at
-  the size of the slide area it fills (`output.slide_areas`: `full`, or
+  sources `plotting.R`. It takes `base_size` and a `slide` switch, so the
+  same function draws the document version in `theme_document()` and the
+  slide version in `theme_slide()`. The script saves the slide version as
+  PNG at the size of the slide area it fills (`output.slide_areas`: `full`, or
   `columns_7`, `columns_6`, `columns_5` for the wider column of a two
   column slide) to its own config path (`<figure>_slide`). The slide then
   shows it at one image pixel per slide pixel, so its text matches the
@@ -554,26 +558,19 @@ log_script_end("NN_verb_object.R", success = TRUE)
 
 ### The Quarto extension
 
-The look of every document comes from one Quarto extension, kept in the
-template at `extension/_extensions/analysis/` and installed into a
-project's `reports-src/` at a tag:
-
-```sh
-cd reports-src
-quarto add soffiafdz/analysis-template/extension@v2026.11
-```
-
-It lands in `reports-src/_extensions/soffiafdz/analysis/` and is
-committed, as Quarto intends; `quarto update` with a later tag takes a
-newer one. The folder is the template's (section 5): a change to the
-theme is made in the template, tagged and then updated here. The
-extension contributes three formats, so a document declares one line and
-nothing else:
+The look of every document comes from one Quarto extension, which copier
+generates with the rest of the project's files into
+`reports-src/_extensions/analysis/` and `copier update` keeps at the
+project's tag (section 13). It is committed with the project, as Quarto
+intends. The folder is the template's (section 5): a change to the theme
+is made in the template, tagged and then updated here. The extension
+contributes three formats, so a document declares one line and nothing
+else:
 
 | Format | Carries |
 |---|---|
 | `analysis-revealjs` | the slide theme (`slides.scss`), the 1600 by 900 slide, flex layout without auto-stretch, the footer script that numbers the slides, IBM Plex Sans embedded from `fonts/`, `embed-resources` |
-| `analysis-pdf` | xelatex, EB Garamond text and TeX Gyre Heros headings at 11.5 pt, a table of contents, numbered sections, margins |
+| `analysis-pdf` | xelatex, EB Garamond text at about 12 pt and TeX Gyre Heros headings on a 13.2 cm text block, a flush-left title, flush-left captions (`document.tex`), a table of contents, numbered sections |
 | `analysis-pptx` | the PowerPoint template `slides-reference.pptx` |
 
 A document can still add its own `css`, `theme` or `include-after-body`
@@ -611,9 +608,9 @@ conversion to PowerPoint:
   :::
 
   ::: {.logos}
-  ![](_extensions/soffiafdz/analysis/logos/mcgill.svg){.mcgill fig-alt="McGill University"}
-  ![](_extensions/soffiafdz/analysis/logos/douglas.png){.douglas .mono fig-alt="Douglas Research Centre"}
-  ![](_extensions/soffiafdz/analysis/logos/stopad.png){.stopad .mono fig-alt="StoP-AD Centre"}
+  ![](_extensions/analysis/logos/mcgill.svg){.mcgill fig-alt="McGill University"}
+  ![](_extensions/analysis/logos/douglas.png){.douglas .mono fig-alt="Douglas Research Centre"}
+  ![](_extensions/analysis/logos/stopad.png){.stopad .mono fig-alt="StoP-AD Centre"}
   :::
   ```
 
@@ -683,10 +680,11 @@ A change to the slides' content is made in both files. Check the PowerPoint
 in PowerPoint itself; its layout cannot be judged from the file, and
 LibreOffice may lay it out differently.
 
-The PowerPoint template is built by `extension/build_slides_reference.py`
+The PowerPoint template is built by `tools/build_slides_reference.py`
 in the template repository, from pandoc's default (Python with python-pptx,
-outside renv), into the extension folder. Re-run it from `extension/`
-only to change the template; the `.pptx` is committed with the extension.
+outside renv), into the extension folder. Re-run it from the template's
+root only to change the template; the `.pptx` is committed with the
+extension.
 
 ---
 
@@ -793,20 +791,17 @@ only to change the template; the `.pptx` is committed with the extension.
 
 ## 13. Starting a project, and keeping it on the template
 
-Two tools deliver the template's files, each from a tag `vYYYY.MM`
-(`CHANGELOG.md` says what each tag changed):
-
-- **copier** generates the tool-facing files from `template/`: the
-  settings (`.gitignore`, `.lintr`, `.here`, `.Rprofile`), `environment.yml`,
-  `DESCRIPTION`, the README outline, the config, the shared helpers in
-  `R/utils/` and the Quarto project files in `reports-src/`. It asks for
-  the environment name and the DESCRIPTION package name, records the tag in
-  `.copier-answers.yml`, and later merges a newer tag's changes three-way.
-  `README.md` and `config/pipeline_config.yaml` are generated once and then
-  belong to the project; everything else it generates is the template's
-  (section 5).
-- **`quarto add`** installs the Quarto extension (section 8) into
-  `reports-src/_extensions/`, and `quarto update` moves it to a newer tag.
+[copier](https://copier.readthedocs.io) delivers the template's files
+from a tag `vYYYY.MM` (`CHANGELOG.md` says what each tag changed). It
+generates the tool-facing files from `template/`: the settings
+(`.gitignore`, `.lintr`, `.here`, `.Rprofile`), `environment.yml`,
+`DESCRIPTION`, the README outline, the config, the shared helpers in
+`R/utils/`, and in `reports-src/` the Quarto project files and the Quarto
+extension (section 8). It asks for the environment name and the
+DESCRIPTION package name, records the tag in `.copier-answers.yml`, and
+later merges a newer tag's changes three-way. `README.md` and
+`config/pipeline_config.yaml` are generated once and then belong to the
+project; everything else it generates is the template's (section 5).
 
 The project's own files grow with the work: scripts, project modules,
 config sections, documents. A first commit with placeholder text or empty
@@ -855,17 +850,9 @@ them on first write.
      fill only the config sections in use.
    - First table or figure: the project's functions in `report_tables.R`
      or `figures.R`, its colours under `output.colors` in the config.
-   - First report: the journal's CSL file and `references.bib`, and the
-     extension, at the tag in `.copier-answers.yml`:
-
-     ```sh
-     cd reports-src
-     quarto add soffiafdz/analysis-template/extension@<tag>
-     ```
-
-     The `_extensions/` folder it creates is committed. The document
-     declares `format: analysis-pdf`; a deck, `format: analysis-revealjs`
-     (section 8).
+   - First report: the journal's CSL file and `references.bib`. The
+     document declares `format: analysis-pdf`; a deck,
+     `format: analysis-revealjs` (section 8).
    - Packages arrive with the code that calls them (implicit snapshot).
      `DESCRIPTION` only lists packages no code calls, such as `lintr`.
 
@@ -887,15 +874,16 @@ edit. In the template:
    change; a second tag in the same month takes a counter, `vYYYY.MM.1`.
    Tags are never moved.
 3. Regenerate and render `example/` from the tag (`copier copy -r <tag>`
-   onto it, the extension copied into its `reports-src/_extensions/`, the
-   documents rendered), so the example tests the template. Commit it.
+   onto it, the documents rendered), so the example tests the template.
+   Commit it.
 
 Then, in each active project, from a clean git tree:
 
 ```sh
-copier update -r vYYYY.MM
-cd reports-src && quarto update soffiafdz/analysis-template/extension@vYYYY.MM
+copier update
 ```
+
+Without `-r`, copier takes the newest tag.
 
 copier merges the tag's changes three-way with the project's files and
 marks any conflict inline, as git does; resolve, re-render the documents

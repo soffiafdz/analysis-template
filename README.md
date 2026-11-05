@@ -23,12 +23,25 @@ and then belong to the project.
 
 ## Parts
 
-Two tools deliver the parts, each from a tag (`vYYYY.MM`):
+[copier](https://copier.readthedocs.io) delivers the parts in
+`template/` from a tag (`vYYYY.MM`):
 
-| Tool | Delivers | Command, in the project |
-|---|---|---|
-| [copier](https://copier.readthedocs.io) | `template/`: `.gitignore`, `.lintr`, `.here`, `.Rprofile`, `environment.yml`, `DESCRIPTION`, the README outline, `config/pipeline_config.yaml`, `R/utils/` (the shared helpers), `reports-src/` (`_quarto.yml`, `.Rprofile`, `.gitignore`, `screenshot_slides.sh`) | `copier copy gh:soffiafdz/analysis-template .` once; `copier update` later |
-| `quarto add` | `extension/`: the Quarto extension with the slide theme, the fonts, the logos, the PDF settings and the PowerPoint template, as the formats `analysis-revealjs`, `analysis-pdf` and `analysis-pptx` | `quarto add soffiafdz/analysis-template/extension@<tag>` in `reports-src/`; `quarto update` later |
+```sh
+copier copy gh:soffiafdz/analysis-template <project_dir>
+copier update
+```
+
+The first starts a project; the second, run in the project, takes the
+newest tag. The parts:
+
+- the settings: `.gitignore`, `.lintr`, `.here`, `.Rprofile`,
+  `environment.yml`, `DESCRIPTION`;
+- the README outline and `config/pipeline_config.yaml`;
+- the shared helpers in `R/utils/`;
+- in `reports-src/`, the Quarto project files and `screenshot_slides.sh`,
+  and the Quarto extension in `_extensions/analysis/`: the slide theme,
+  the fonts, the logos, the PDF settings and the PowerPoint template, as
+  the formats `analysis-revealjs`, `analysis-pdf` and `analysis-pptx`.
 
 copier asks for the environment name and the DESCRIPTION package name,
 records the tag in `.copier-answers.yml`, and merges a later tag's changes
@@ -74,7 +87,7 @@ and GNU sed takes `-i` alone.
 `GUIDE.md`, `CHANGELOG.md` and this README are licensed under
 [CC BY 4.0](LICENSE-docs). Everything else, including the files copied into
 projects, is under the [MIT licence](LICENSE), except the logos in
-`extension/_extensions/analysis/logos/`, which are trademarks of their
-institutions (`SOURCES.md` there), the IBM Plex Sans fonts beside them,
-under the SIL Open Font License (`fonts/OFL.txt`), and the TeX Gyre Heros
-fonts, under the GUST Font License (`fonts/GUST-FONT-LICENSE.txt`).
+`template/reports-src/_extensions/analysis/logos/`, which are trademarks
+of their institutions (`SOURCES.md` there), the IBM Plex Sans fonts beside
+them, under the SIL Open Font License (`fonts/OFL.txt`), and the TeX Gyre
+Heros fonts, under the GUST Font License (`fonts/GUST-FONT-LICENSE.txt`).

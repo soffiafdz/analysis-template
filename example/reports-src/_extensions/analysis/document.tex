@@ -1,0 +1,32 @@
+% The report page of the analysis-pdf format (docs/STYLE.md, Documents):
+% a flush-left title in the headings' face, quiet headings, and captions
+% flush left with their label in bold and no hanging indent
+\linespread{1.08}
+\usepackage{caption}
+\captionsetup{format=plain, labelsep=period, justification=raggedright,
+  singlelinecheck=false, labelfont=bf, font=small, skip=6pt}
+\setkomafont{section}{\sffamily\bfseries\large}
+\setkomafont{subsection}{\sffamily\bfseries\normalsize}
+\RedeclareSectionCommand[beforeskip=14pt, afterskip=5pt]{section}
+\RedeclareSectionCommand[beforeskip=12pt, afterskip=4pt]{subsection}
+% Tables span the text width; a narrower minimum gap between columns lets
+% the wide ones fit (the fill spreads the rest)
+\setlength{\tabcolsep}{4pt}
+\definecolor{inksoft}{HTML}{5C5C5C}
+\definecolor{inkmuted}{HTML}{737373}
+\makeatletter
+\renewcommand{\@maketitle}{%
+  \begin{flushleft}
+    {\sffamily\bfseries\fontsize{20}{24}\selectfont\@title\par}%
+    \ifx\@subtitle\@empty\else
+      \vspace{6pt}%
+      {\sffamily\fontsize{11.5}{14}\selectfont\color{inksoft}\@subtitle\par}%
+    \fi
+    \vspace{4pt}%
+    % Author and date on one muted line; either may be empty
+    \sbox0{\@author}%
+    {\sffamily\fontsize{9}{11}\selectfont\color{inkmuted}%
+      \ifdim\wd0>0pt \@author\quad\fi\@date\par}%
+  \end{flushleft}%
+  \vspace{10pt}}
+\makeatother
