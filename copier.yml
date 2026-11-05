@@ -1,4 +1,4 @@
-# Copier template. `copier copy gh:soffiafdz/r-analysis-template <project>`
+# Copier template. `copier copy gh:soffiafdz/analysis-template <project>`
 # generates a project's tool-facing files from template/ at the latest tag
 # (GUIDE.md section 13); `copier update` moves a project to a later tag.
 _min_copier_version: "9.0.0"
@@ -11,11 +11,11 @@ _skip_if_exists:
 _message_after_copy: |
   Next (GUIDE.md section 13): create the environment, initialise renv, and
   install the Quarto extension from reports-src/:
-    quarto add soffiafdz/r-analysis-template/extension@{{ _copier_answers._commit }}
+    quarto add soffiafdz/analysis-template/extension@{{ _copier_answers._commit }}
 
 template_url:
   type: str
-  default: https://github.com/soffiafdz/r-analysis-template
+  default: https://github.com/soffiafdz/analysis-template
   when: false
 
 env_name:

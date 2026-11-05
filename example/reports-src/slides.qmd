@@ -56,7 +56,7 @@ stopifnot(
 ::: {.title-block}
 [Body mass of Palmer<br>penguins by species<br>and sex]{.title}
 
-[A worked example of the R analysis project template]{.subtitle}
+[A worked example of the analysis project template]{.subtitle}
 
 [[Worked example]{.byline} [Data: Gorman, Williams and Fraser (2014) · `r format(Sys.Date(), "%B %Y")`]{.meta}]{.credit}
 :::

@@ -2,10 +2,10 @@ title: Analysis reports and slides
 author: Sofía Fernández
 version: 2026.11.0
 quarto-required: ">=1.9.0"
-# The formats of the R analysis project template (GUIDE.md section 8,
+# The formats of the analysis project template (GUIDE.md section 8,
 # docs/STYLE.md). A document declares one of them and nothing else:
 # analysis-revealjs, analysis-pdf or analysis-pptx. Installed from the
-# template's reports-src/ with quarto add; updated with quarto update.
+# template's extension/ with quarto add; updated with quarto update.
 contributes:
   formats:
     # The designed deck: self-contained HTML in the slide theme

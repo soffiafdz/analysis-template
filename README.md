@@ -1,4 +1,4 @@
-# R analysis project template
+# Analysis project template
 
 Files and conventions for R analysis projects in which anyone with access to
 the data can rebuild the software environment, run the pipeline from raw
@@ -27,8 +27,8 @@ Two tools deliver the parts, each from a tag (`vYYYY.MM`):
 
 | Tool | Delivers | Command, in the project |
 |---|---|---|
-| [copier](https://copier.readthedocs.io) | `template/`: `.gitignore`, `.lintr`, `.here`, `.Rprofile`, `environment.yml`, `DESCRIPTION`, the README outline, `config/pipeline_config.yaml`, `R/utils/` (the shared helpers), `reports-src/` (`_quarto.yml`, `.Rprofile`, `.gitignore`, `screenshot_slides.sh`) | `copier copy gh:soffiafdz/r-analysis-template .` once; `copier update` later |
-| `quarto add` | `extension/`: the Quarto extension with the slide theme, the fonts, the logos, the PDF settings and the PowerPoint template, as the formats `analysis-revealjs`, `analysis-pdf` and `analysis-pptx` | `quarto add soffiafdz/r-analysis-template/extension@<tag>` in `reports-src/`; `quarto update` later |
+| [copier](https://copier.readthedocs.io) | `template/`: `.gitignore`, `.lintr`, `.here`, `.Rprofile`, `environment.yml`, `DESCRIPTION`, the README outline, `config/pipeline_config.yaml`, `R/utils/` (the shared helpers), `reports-src/` (`_quarto.yml`, `.Rprofile`, `.gitignore`, `screenshot_slides.sh`) | `copier copy gh:soffiafdz/analysis-template .` once; `copier update` later |
+| `quarto add` | `extension/`: the Quarto extension with the slide theme, the fonts, the logos, the PDF settings and the PowerPoint template, as the formats `analysis-revealjs`, `analysis-pdf` and `analysis-pptx` | `quarto add soffiafdz/analysis-template/extension@<tag>` in `reports-src/`; `quarto update` later |
 
 copier asks for the environment name and the DESCRIPTION package name,
 records the tag in `.copier-answers.yml`, and merges a later tag's changes

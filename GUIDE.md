@@ -1,4 +1,4 @@
-# R analysis conventions: full guide
+# Analysis project conventions: full guide
 
 Reference for setting up and running R analysis projects, with the reasoning
 behind each choice. Projects carry the short version, `docs/CONVENTIONS.md`;
@@ -552,7 +552,7 @@ project's `reports-src/` at a tag:
 
 ```sh
 cd reports-src
-quarto add soffiafdz/r-analysis-template/extension@v2026.11
+quarto add soffiafdz/analysis-template/extension@v2026.11
 ```
 
 It lands in `reports-src/_extensions/soffiafdz/analysis/` and is
@@ -811,7 +811,7 @@ them on first write.
 1. Generate the files (copier is installed once, `pipx install copier`):
 
    ```sh
-   copier copy gh:soffiafdz/r-analysis-template <project_dir>
+   copier copy gh:soffiafdz/analysis-template <project_dir>
    cd <project_dir>
    ```
 
@@ -851,7 +851,7 @@ them on first write.
 
      ```sh
      cd reports-src
-     quarto add soffiafdz/r-analysis-template/extension@<tag>
+     quarto add soffiafdz/analysis-template/extension@<tag>
      ```
 
      The `_extensions/` folder it creates is committed. The document
@@ -885,7 +885,7 @@ Then, in each active project, from a clean git tree:
 
 ```sh
 copier update -r vYYYY.MM
-cd reports-src && quarto update soffiafdz/r-analysis-template/extension@vYYYY.MM
+cd reports-src && quarto update soffiafdz/analysis-template/extension@vYYYY.MM
 ```
 
 copier merges the tag's changes three-way with the project's files and
