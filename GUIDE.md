@@ -900,3 +900,61 @@ departure from the conventions, written under "Project notes"; a deck's
 own stylesheet or include beside the deck (section 8); project functions in
 project modules (section 5). A change a project needs in a shared file is
 either general, and goes to the template first, or it is one of these.
+
+### 13.3 Moving an existing project onto the template
+
+A project started before the template, or copied from it by hand, is
+moved once; from then on it updates like any other (13.2). The move
+changes code and configuration only. A deck or report keeps its look
+until it is next presented or revised, and the project records that as
+a departure.
+
+1. From a clean git tree, generate the template outside the repository,
+   with the project's environment name (`environment.yml`) and package
+   name (`DESCRIPTION`):
+
+   ```sh
+   copier copy --defaults --data env_name=<env> --data package_name=<pkg> \
+     gh:soffiafdz/analysis-template /tmp/template-check
+   ```
+
+2. Reconcile once, file by file:
+   - The shared files (the six helpers in `R/utils/`, the settings, the
+     `reports-src/` files and `reports-src/_extensions/`) are replaced by
+     the generated ones. Differences that are only older template text
+     need no thought; an edit made in the project is either general, and
+     goes to the template first, or project code, and moves out.
+   - Project functions appended to `plotting.R` and `tables.R` move to
+     `figures.R` and `report_tables.R`, and scripts and documents source
+     those. Project colours in `manuscript_colors()` move to
+     `output.colors` in the config.
+   - Figures drawn before the template set a face keep it with
+     `base_family = "sans"` in their `theme_publication()` calls until
+     they are redrawn.
+   - The config's `raw` and `external` groups become `inputs`, with one
+     folder per source (3.1), and the scripts' `get_data_path()` calls and
+     headers follow.
+   - `reports-src/_quarto.yml` keeps only `project:` and `execute:`. A
+     document that keeps its old look carries its old format block in its
+     own YAML; a document on the new look declares `analysis-pdf` or
+     `analysis-revealjs`.
+   - `ragg` and `systemfonts` are added to `DESCRIPTION` and the lockfile
+     (`renv::install()`, `renv::snapshot()`).
+   - The local `docs/CONVENTIONS.md` and `docs/STYLE.md` are deleted; the
+     README links the template at the tag and lists every departure under
+     "Project notes".
+
+3. Copy `.copier-answers.yml` from the generated folder into the
+   repository, with `_src_path: gh:soffiafdz/analysis-template`, and
+   commit the move as one change, "Move onto the analysis template at
+   vYYYY.MM".
+
+4. Check it: generate the template again from GitHub at that tag and
+   compare. Only the files the project owns (`README.md`, the config,
+   `.Rprofile` with renv's line, `_quarto.yml` with its render list)
+   should differ.
+
+5. On the machine that holds the data, move the input files into
+   `data/inputs/<source>/` and run `renv::restore()`. A link with a
+   relative target breaks when moved one folder deeper; recreate it with
+   an absolute target instead.

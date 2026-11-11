@@ -6,6 +6,12 @@ generated from and lists its departures under "Project notes" in its
 README. A change is made here first, tagged, and then taken up in the
 projects that use it.
 
+## v2026.11.2 (2026-11-11)
+
+- GUIDE section 13.3 says how an existing project moves onto the
+  template, from the moves of preventad_odour and mtl-memory-sex; the
+  README points to 13.1, 13.2 and 13.3.
+
 ## v2026.11.1 (2026-11-10)
 
 - `theme_publication()` accepts R's generic families (`"sans"`,

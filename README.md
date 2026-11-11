@@ -48,7 +48,8 @@ records the tag in `.copier-answers.yml`, and merges a later tag's changes
 three-way. `README.md` and `config/pipeline_config.yaml` are generated once
 and then belong to the project; the rest is the template's (`GUIDE.md`
 section 5). A document declares one of the three formats and nothing else.
-To start a project, follow [`GUIDE.md`](GUIDE.md) section 13.
+To start a project, follow [`GUIDE.md`](GUIDE.md) section 13.1; to update
+one, 13.2; to move an existing project onto the template, 13.3.
 
 ## Versions
 
