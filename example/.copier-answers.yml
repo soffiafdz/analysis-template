@@ -1,5 +1,5 @@
 # The template tag this project was generated from; copier update reads it
-_commit: v2026.11
+_commit: v2026.11.1
 _src_path: gh:soffiafdz/analysis-template
 env_name: penguins_example
 package_name: penguins.example

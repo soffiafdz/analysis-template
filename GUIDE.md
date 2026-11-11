@@ -378,7 +378,10 @@ modules:
   the fonts registered with systemfonts, so figures for documents and
   slides are PNG. PDFs are written with `cairo_pdf`, which embeds fonts but
   sees only those installed on the system: it suits a journal that
-  prescribes Arial or Helvetica, set through `base_family`.
+  prescribes Arial or Helvetica, set through `base_family`. R's generic
+  families (`"sans"`, `"serif"`, `"mono"`) are accepted too: a project
+  moving onto the template keeps its existing figures in the device's
+  default face until they are redrawn.
 - Slide figures: `register_slide_font()` registers the IBM Plex Sans files
   of the Quarto extension (section 8), which the deck embeds;
   `theme_slide(base_size)`

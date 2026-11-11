@@ -6,6 +6,13 @@ generated from and lists its departures under "Project notes" in its
 README. A change is made here first, tagged, and then taken up in the
 projects that use it.
 
+## v2026.11.1 (2026-11-10)
+
+- `theme_publication()` accepts R's generic families (`"sans"`,
+  `"serif"`, `"mono"`) as `base_family`, so a project moving onto the
+  template can keep figures drawn before it in the device's default face
+  until they are redrawn. Found while moving preventad_odour.
+
 ## v2026.11 (2026-11-05)
 
 The refactor: one authority, tagged; copier delivers every file, the Quarto

@@ -93,15 +93,18 @@ get_palette <- function(type = "default") {
 #' the template's PDF format: call register_document_font() first and save
 #' them as PNG, which ragg draws in the registered face (cairo_pdf would
 #' substitute a system font). A journal that prescribes its own face gets
-#' it through base_family.
+#' it through base_family; R's generic families ("sans", "serif", "mono")
+#' keep a figure in the device's default face, as figures drawn before the
+#' template set one.
 #' @param base_size Base font size
 #' @param use_markdown Whether to use ggtext markdown in axis titles and text,
 #'   strips and the plot title (requires the ggtext package)
-#' @param base_family Font family, registered or installed on the system
+#' @param base_family Font family: registered, installed on the system, or
+#'   one of R's generic families
 #' @return ggplot2 theme object
 theme_publication <- function(base_size = 10, use_markdown = FALSE,
                               base_family = "TeX Gyre Heros") {
-  known.v <- c(systemfonts::registry_fonts()$family,
+  known.v <- c("sans", "serif", "mono", systemfonts::registry_fonts()$family,
                systemfonts::system_fonts()$family)
   if (!base_family %in% known.v) {
     stop("Font family '", base_family, "' is not available; call ",
