@@ -6,6 +6,15 @@ generated from and lists its departures under "Project notes" in its
 README. A change is made here first, tagged, and then taken up in the
 projects that use it.
 
+## v2026.11.3 (2026-11-12)
+
+- GUIDE section 3.3 says how a project works on both the workstation and
+  a cluster: code through git, data through per-machine links in
+  `data/inputs/`, R from the cluster's module with renv restoring only the
+  packages the cluster scripts load, results copied back as files, images
+  kept with the imaging pipeline, and backups never used as working
+  copies. The README points to it.
+
 ## v2026.11.2 (2026-11-11)
 
 - GUIDE section 13.3 says how an existing project moves onto the

@@ -225,6 +225,48 @@ zstd -dc data/archive/<release_name>.tar.zst | tar -xf -
 when cells are small. Results are shared deliberately, after checking them
 against the data use agreement.
 
+### 3.3 Two machines: the workstation and the cluster
+
+Code is written and reports are rendered on the workstation; long runs
+(bootstraps, segmentation, anything that takes hours) go to a cluster. Each
+kind of file moves between the two by one route only.
+
+- **Code moves through git.** The workstation and the cluster each hold an
+  ordinary clone, with GitHub between them. Commit and push where the edit
+  was made, and pull on the other machine before working there. No
+  submodules and no copying code with rsync: the repository already holds
+  only code (3.2), and a second route is how two copies drift apart.
+- **On the cluster, clones live in `$HOME/code/<project>`.** They are small,
+  and home space keeps them out of the project space's file-count quota.
+  Data lives in project space, one folder per dataset, readable by its
+  owner only: `/project/<allocation>/<user>/<dataset>/`. Scratch holds only
+  intermediate files, since it is purged.
+- **Data reaches the code through `data/inputs/` (3.1).** On each machine,
+  `data/inputs/<source>` links to that machine's copy of the dataset:
+  `~/data/<dataset>` on the workstation, the project-space folder on the
+  cluster. The relative paths are the same on both, so neither the scripts
+  nor the config change between machines. The cluster gets only the inputs
+  its runs need.
+- **On the cluster, R comes from the cluster's module, and renv stays on.**
+  The project's `environment.yml` pins the same R version as the module.
+  Restore only the packages the cluster scripts load, at the lockfile's
+  versions: `renv::restore(packages = c(...))`. The reporting packages
+  never run there, and turning renv off would leave package versions to
+  whatever CRAN serves on the day.
+- **Results come back as files, not commits.** A cluster run writes to
+  `models/results/` or `outputs/` as it would anywhere; copy them back with
+  rsync. The README's project notes say which scripts ran on the cluster
+  and with what settings (R version, number of workers): a bootstrap
+  interval depends on the number of workers, so a local rerun gives
+  slightly different intervals.
+- **Images stay with the imaging pipeline.** An analysis project never
+  holds images. A separate, code-only imaging repository runs next to the
+  images on the cluster and writes tables; those tables are the analysis
+  project's inputs (`data/inputs/<pipeline>/`, named as in 3.1).
+- **A backup is not a working copy.** A project folder copied whole with
+  rsync, `.git` included, is a snapshot. Never work in it: the next backup
+  overwrites whatever changed there. Work only in the clones.
+
 ---
 
 ## 4. Configuration: one YAML file
