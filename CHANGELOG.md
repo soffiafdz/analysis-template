@@ -6,6 +6,13 @@ generated from and lists its departures under "Project notes" in its
 README. A change is made here first, tagged, and then taken up in the
 projects that use it.
 
+## v2026.11.5 (2026-11-16)
+
+- GUIDE section 3.3: every repository, pipelines included, is cloned in the
+  cluster's project space and linked from home; container images,
+  environments and job logs live there too. Home keeps only shell
+  configuration and links. Corrects v2026.11.4, which put pipelines in home.
+
 ## v2026.11.4 (2026-11-16)
 
 - GUIDE section 3.3: an analysis project is cloned in the cluster's project

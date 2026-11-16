@@ -236,15 +236,18 @@ kind of file moves between the two by one route only.
   was made, and pull on the other machine before working there. No
   submodules and no copying code with rsync: the repository already holds
   only code (3.2), and a second route is how two copies drift apart.
-- **Where a clone lives on the cluster depends on what it holds.** An
-  analysis project, which carries its own data and results, is cloned in
-  project space next to them: `/project/<allocation>/<user>/<project>/`,
-  readable by its owner only. Its untracked files (`data/`, `models/`,
-  `outputs/`) are then copied in from the workstation, and only those:
-  `git ls-files -z --others --directory` piped to `rsync --from0
-  --files-from=-`. A code-only pipeline is cloned in `$HOME/code/<pipeline>`
-  and reads its data from project space, one folder per dataset. Scratch
-  holds only intermediate files, since it is purged.
+- **On the cluster, everything lives in project space; home holds links.**
+  Every repository, analysis project or pipeline, is cloned in
+  `/project/<allocation>/<user>/<repo>/`, readable by its owner only, and
+  linked from `$HOME/code/<repo>` for short paths. Container images,
+  environments and job logs live there too, also linked from home. Home
+  keeps only shell configuration and these links: it has the smallest
+  quota. A project's untracked files (`data/`, `models/`, `outputs/`) are
+  copied in from the workstation, and only those: `git ls-files -z
+  --others --directory` piped to `rsync --from0 --files-from=-`. A
+  pipeline's data and results live in their own folders, named so they
+  never take a clone's name (`<pipeline>-results`). Scratch holds only
+  intermediate files, since it is purged.
 - **Data reaches the code through `data/inputs/` (3.1).** On each machine,
   `data/inputs/<source>` is the same relative path: a folder copied in with
   the project's untracked files, or a link to a dataset shared by several
