@@ -236,17 +236,21 @@ kind of file moves between the two by one route only.
   was made, and pull on the other machine before working there. No
   submodules and no copying code with rsync: the repository already holds
   only code (3.2), and a second route is how two copies drift apart.
-- **On the cluster, clones live in `$HOME/code/<project>`.** They are small,
-  and home space keeps them out of the project space's file-count quota.
-  Data lives in project space, one folder per dataset, readable by its
-  owner only: `/project/<allocation>/<user>/<dataset>/`. Scratch holds only
-  intermediate files, since it is purged.
+- **Where a clone lives on the cluster depends on what it holds.** An
+  analysis project, which carries its own data and results, is cloned in
+  project space next to them: `/project/<allocation>/<user>/<project>/`,
+  readable by its owner only. Its untracked files (`data/`, `models/`,
+  `outputs/`) are then copied in from the workstation, and only those:
+  `git ls-files -z --others --directory` piped to `rsync --from0
+  --files-from=-`. A code-only pipeline is cloned in `$HOME/code/<pipeline>`
+  and reads its data from project space, one folder per dataset. Scratch
+  holds only intermediate files, since it is purged.
 - **Data reaches the code through `data/inputs/` (3.1).** On each machine,
-  `data/inputs/<source>` links to that machine's copy of the dataset:
-  `~/data/<dataset>` on the workstation, the project-space folder on the
-  cluster. The relative paths are the same on both, so neither the scripts
-  nor the config change between machines. The cluster gets only the inputs
-  its runs need.
+  `data/inputs/<source>` is the same relative path: a folder copied in with
+  the project's untracked files, or a link to a dataset shared by several
+  projects (`~/data/<dataset>` on the workstation, its project-space folder
+  on the cluster). Neither the scripts nor the config change between
+  machines.
 - **On the cluster, R comes from the cluster's module, and renv stays on.**
   The project's `environment.yml` pins the same R version as the module.
   Restore only the packages the cluster scripts load, at the lockfile's
@@ -263,9 +267,15 @@ kind of file moves between the two by one route only.
   holds images. A separate, code-only imaging repository runs next to the
   images on the cluster and writes tables; those tables are the analysis
   project's inputs (`data/inputs/<pipeline>/`, named as in 3.1).
-- **A backup is not a working copy.** A project folder copied whole with
-  rsync, `.git` included, is a snapshot. Never work in it: the next backup
-  overwrites whatever changed there. Work only in the clones.
+- **Never copy a repository whole.** Code reaches the cluster only by
+  cloning, and rsync carries only untracked files into the clone. A folder
+  copied whole, `.git` included, looks like a clone but drifts from GitHub,
+  and a later copy overwrites whatever changed in it.
+- **Cluster runs are jobs kept in the repository.** Each job script lives
+  in `jobs/`, refuses to run when the clone has uncommitted changes, and
+  writes the commit it ran from next to its outputs. A table or result is
+  used only when the committed code reproduces it: code rewritten after a
+  run is rerun and compared with that run before it replaces it.
 
 ---
 

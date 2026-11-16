@@ -6,6 +6,16 @@ generated from and lists its departures under "Project notes" in its
 README. A change is made here first, tagged, and then taken up in the
 projects that use it.
 
+## v2026.11.4 (2026-11-16)
+
+- GUIDE section 3.3: an analysis project is cloned in the cluster's project
+  space with only its untracked files copied in; code-only pipelines are
+  cloned in `$HOME/code`. Repositories are never copied whole. Cluster runs
+  are job scripts kept in the repository, run only from committed code,
+  record their commit, and a rewrite replaces earlier output only once it
+  reproduces it. From moving projects onto a cluster, and a data-curation
+  rewrite that had been committed without being run.
+
 ## v2026.11.3 (2026-11-12)
 
 - GUIDE section 3.3 says how a project works on both the workstation and
