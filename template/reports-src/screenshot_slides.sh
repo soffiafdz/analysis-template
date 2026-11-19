@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Screenshot every slide of a rendered revealjs deck, to check each one
-# before the deck is shared (docs/STYLE.md, "Checking a deck").
+# before the deck is shared (the analysis template's docs/STYLE.md,
+# "Checking a deck").
 #   reports-src/screenshot_slides.sh outputs/reports/slides.html <out_dir>
 # Needs Firefox (FIREFOX=/path/to/firefox if it is not on the PATH); on some
 # machines Chrome's headless mode crashes or prints blank pages. The window

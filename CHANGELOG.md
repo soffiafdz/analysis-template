@@ -6,6 +6,12 @@ generated from and lists its departures under "Project notes" in its
 README. A change is made here first, tagged, and then taken up in the
 projects that use it.
 
+## v2026.11.6 (2026-11-19)
+
+- `reports-src/screenshot_slides.sh` names the template's `docs/STYLE.md`
+  for "Checking a deck": projects no longer carry their own copy of
+  STYLE.md since v2026.11, so the bare path pointed nowhere.
+
 ## v2026.11.5 (2026-11-16)
 
 - GUIDE section 3.3: every repository, pipelines included, is cloned in the
